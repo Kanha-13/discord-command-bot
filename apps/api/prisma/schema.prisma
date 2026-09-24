@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated"
 }
 
 datasource db {
@@ -44,6 +45,7 @@ model User {
 
 model Session {
   id        String   @id @default(cuid())
+  tokenHash String   @unique
   userId    String
   expiresAt DateTime
 
@@ -120,7 +122,7 @@ model Action {
 
   createdAt   DateTime  @default(now())
   completedAt DateTime?
-
+  
   @@index([interactionId])
   @@index([status])
   @@index([type, status])
