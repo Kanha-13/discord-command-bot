@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+}
+
+enum InteractionStatus {
+  RECEIVED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ActionType {
+  DISCORD_RESPONSE
+  MIRROR_NOTIFICATION
+}
+
+enum ActionStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  discordId String   @unique
+  username  String
+  avatarUrl String?
+  role      UserRole @default(ADMIN)
+
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model DiscordServer {
+  id      String  @id @default(cuid())
+  guildId String  @unique
+  name    String
+  iconUrl String?
+
+  configuration ServerConfiguration?
+  interactions  CommandInteraction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServerConfiguration {
+  id               String @id @default(cuid())
+  serverId         String @unique
+  commandChannelId String
+  mirrorChannelId  String
+
+  server DiscordServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommandInteraction {
+  id            String @id @default(cuid())
+  interactionId String @unique
+
+  serverId      String
+  channelId     String
+  userDiscordId String
+  commandName   String
+
+  payload Json
+
+  status      InteractionStatus @default(RECEIVED)
+  response    String?
+  error       String?
+  processedAt DateTime?
+
+  server DiscordServer @relation(fields: [serverId], references: [id])
+
+  actions Action[]
+
+  createdAt DateTime @default(now())
+
+  @@index([serverId])
+  @@index([commandName])
+  @@index([createdAt])
+  @@index([userDiscordId])
+}
+
+model Action {
+  id            String       @id @default(cuid())
+  interactionId String
+  type          ActionType
+  status        ActionStatus @default(PENDING)
+  attempts      Int          @default(0)
+  error         String?
+
+  interaction CommandInteraction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([interactionId])
+  @@index([status])
+  @@index([type, status])
+}
