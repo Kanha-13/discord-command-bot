@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import pinoHttp from "pino-http";
+import discordRouter from "./routes/discord.routes"
 
 const app = express();
 
@@ -11,9 +12,18 @@ app.use(
   }),
 );
 
+app.use(
+  "/api/discord/interactions",
+  express.raw({
+    type: "application/json",
+  }),
+);
+
 app.use(express.json());
 
 app.use(pinoHttp());
+
+app.use("/api/discord", discordRouter);
 
 app.get("/health", (_req, res) => {
   res.json({
