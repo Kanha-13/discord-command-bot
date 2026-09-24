@@ -1,0 +1,21 @@
+{
+  "name": "discord_command_bot",
+  "version": "1.0.0",
+  "private":true,
+  "description": "a discord slash command bot",
+  "author": "kanha-13 <kanha.agr11@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"yarn run dev:api\" \"yarn run dev:web\"",
+    "dev:api": "yarn --prefix apps/api run dev",
+    "dev:web": "yarn --prefix apps/web run dev",
+    "build": "yarn run build:api && yarn run build:web",
+    "build:api": "yarn --prefix apps/api run build",
+    "build:web": "yarn --prefix apps/web run build",
+    "test": "yarn --prefix apps/api run test"
+  },
+  "dependencies": {
+    "concurrently": "^10.0.5",
+    "tsx": "^4.23.15"
+  }
+}
