@@ -125,24 +125,16 @@ export async function handleDiscordInteraction(
         interactionRecord.interaction.id,
       );
 
-      const mirrorSucceeded =
-        await executeMirrorAction({
-          interactionId: interactionRecord.interaction.id,
-          serverId: server.id,
-          message: result.mirrorNotification,
-        });
+      await executeMirrorAction({
+        interactionId: interactionRecord.interaction.id,
+        serverId: server.id,
+        message: result.mirrorNotification,
+      });
 
-      if (mirrorSucceeded) {
-        await markInteractionCompleted(
-          interactionRecord.interaction.id,
-          result.response,
-        );
-      } else {
-        await markInteractionFailed(
-          interactionRecord.interaction.id,
-          "Mirror notification failed after retries.",
-        );
-      }
+      await markInteractionCompleted(
+        interactionRecord.interaction.id,
+        result.response,
+      );
     } catch (error) {
       const message =
         error instanceof Error
