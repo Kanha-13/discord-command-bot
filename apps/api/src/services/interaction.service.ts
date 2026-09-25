@@ -1,3 +1,5 @@
+import { Prisma } from "../generated/client";
+
 import {
   createInteraction,
   findByInteractionId,
@@ -10,6 +12,7 @@ import {
   findInteractions,
 } from "../repositories/interaction.repository";
 import type { InteractionStatus } from "@prisma/client";
+import { findByServerId } from "../repositories/configuration.repository";
 
 interface GetInteractionsParams {
   page?: number;
@@ -27,7 +30,9 @@ export async function getOrCreateInteraction(data: {
   commandName: string;
   payload: object;
 }) {
-  const existing = await findByInteractionId(data.interactionId);
+  const existing = await findByInteractionId(
+    data.interactionId,
+  );
 
   if (existing) {
     return {
@@ -36,14 +41,35 @@ export async function getOrCreateInteraction(data: {
     };
   }
 
-  const interaction = await createInteraction(data);
+  try {
+    const interaction = await createInteraction(data);
 
-  await createActions(interaction.id);
+    await createActions(interaction.id);
 
-  return {
-    interaction,
-    duplicate: false,
-  };
+    return {
+      interaction,
+      duplicate: false,
+    };
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      const existingInteraction =
+        await findByInteractionId(
+          data.interactionId,
+        );
+
+      if (existingInteraction) {
+        return {
+          interaction: existingInteraction,
+          duplicate: true,
+        };
+      }
+    }
+
+    throw error;
+  }
 }
 
 export async function markInteractionProcessing(
@@ -107,4 +133,10 @@ export async function getInteractions(
 
 export async function getInteractionById(id: string) {
   return findInteractionById(id);
+}
+
+export async function getInteractionConfiguration(
+  serverId: string,
+) {
+  return findByServerId(serverId);
 }

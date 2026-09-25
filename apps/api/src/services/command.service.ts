@@ -10,6 +10,8 @@ import type {
   DiscordInteraction,
 } from "../integrations/discord/discord.types";
 
+import { getInteractionConfiguration } from "../services/interaction.service";
+
 export async function executeCommand(
   interaction: DiscordInteraction,
 ) {
@@ -51,4 +53,33 @@ export async function executeCommand(
       interaction.data.options,
     ),
   });
+}
+
+export async function isCommandAllowedInChannel(
+  serverId: string,
+  channelId: string,
+) {
+  const configuration =
+    await getInteractionConfiguration(serverId);
+
+  if (!configuration) {
+    return {
+      allowed: false,
+      reason: "NOT_CONFIGURED" as const,
+    };
+  }
+
+  if (
+    configuration.commandChannelId !== channelId
+  ) {
+    return {
+      allowed: false,
+      reason: "INVALID_CHANNEL" as const,
+    };
+  }
+
+  return {
+    allowed: true,
+    reason: null,
+  };
 }
