@@ -5,6 +5,8 @@ import {
   vi,
 } from "vitest";
 
+import { Request, Response } from "express";
+
 import {
   handleDiscordInteraction,
 } from "../discord-interaction.controller";
@@ -268,7 +270,6 @@ describe("handleDiscordInteraction", () => {
       iconUrl: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      configuration: null,
     });
 
     vi.mocked(getOrCreateInteraction).mockResolvedValue({
@@ -279,7 +280,7 @@ describe("handleDiscordInteraction", () => {
     } as never);
 
     vi.mocked(markInteractionProcessing).mockResolvedValue(
-      undefined,
+      {} as never,
     );
 
     vi.mocked(isCommandAllowedInChannel).mockResolvedValue({
@@ -301,11 +302,11 @@ describe("handleDiscordInteraction", () => {
     );
 
     vi.mocked(markInteractionCompleted).mockResolvedValue(
-      undefined,
+      {} as never,
     );
 
     vi.mocked(markInteractionFailed).mockResolvedValue(
-      undefined,
+      {} as never,
     );
 
     const interaction = {
@@ -336,7 +337,7 @@ describe("handleDiscordInteraction", () => {
 
     const req = {
       body: Buffer.from(JSON.stringify(interaction)),
-    } as Request;
+    } as unknown as Request;
 
     const json = vi.fn();
     const status = vi.fn().mockReturnThis();
