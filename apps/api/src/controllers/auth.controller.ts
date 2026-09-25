@@ -26,7 +26,7 @@ export function redirectToDiscord(_req: Request, res: Response) {
     getOAuthStateCookieOptions(),
   );
 
-  return res.redirect(getDiscordOAuthUrl());
+  return res.redirect(getDiscordOAuthUrl(state));
 }
 
 export async function discordCallback(

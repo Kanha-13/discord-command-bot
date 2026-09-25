@@ -29,7 +29,7 @@ function getOAuthConfig() {
   };
 }
 
-export function getDiscordOAuthUrl(): string {
+export function getDiscordOAuthUrl(state: string): string {
   const { clientId, redirectUri } = getOAuthConfig();
 
   const params = new URLSearchParams({
@@ -37,6 +37,7 @@ export function getDiscordOAuthUrl(): string {
     redirect_uri: redirectUri,
     response_type: "code",
     scope: "identify",
+    state
   });
 
   return `https://discord.com/oauth2/authorize?${params.toString()}`;

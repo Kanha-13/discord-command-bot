@@ -10,8 +10,8 @@ export function getSessionCookieOptions() {
 
   return {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: "lax" as const,
+    secure: true,
+    sameSite: "none" as const,
     maxAge: SESSION_DURATION_MS,
     path: "/",
   };
@@ -22,7 +22,7 @@ export function getOAuthStateCookieOptions() {
 
   return {
     httpOnly: true,
-    secure: isProduction,
+    secure: true,
     sameSite: "lax" as const,
     maxAge: OAUTH_STATE_DURATION_MS,
     path: "/api/auth",
