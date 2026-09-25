@@ -28,10 +28,8 @@ export async function discordRequest<T>(
   );
 
   if (!response.ok) {
-    const body = await response.text();
-
     throw new Error(
-      `Discord API error ${response.status}: ${body}`,
+      `Discord API request failed with status ${response.status}.`,
     );
   }
 

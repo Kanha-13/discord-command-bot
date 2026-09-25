@@ -47,10 +47,8 @@ export async function registerGlobalCommands() {
   );
 
   if (!response.ok) {
-    const body = await response.text();
-
     throw new Error(
-      `Discord command registration failed: ${response.status} ${body}`,
+      `Discord API request failed with status ${response.status}.`,
     );
   }
 
