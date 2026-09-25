@@ -1,5 +1,5 @@
 import { prisma } from "../configs/database";
-import type { InteractionStatus } from "@prisma/client";
+import type { InteractionStatus } from "../generated/client";
 
 export async function findByInteractionId(
   interactionId: string,

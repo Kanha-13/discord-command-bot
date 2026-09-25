@@ -11,7 +11,7 @@ import {
   findInteractionById,
   findInteractions,
 } from "../repositories/interaction.repository";
-import type { InteractionStatus } from "@prisma/client";
+import type { InteractionStatus } from "../generated/client";
 import { findByServerId } from "../repositories/configuration.repository";
 
 interface GetInteractionsParams {
