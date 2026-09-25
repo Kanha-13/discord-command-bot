@@ -5,6 +5,20 @@ import {
 } from "../repositories/interaction.repository";
 import { createActions } from "../repositories/action.repository";
 
+import {
+  findInteractionById,
+  findInteractions,
+} from "../repositories/interaction.repository";
+import type { InteractionStatus } from "@prisma/client";
+
+interface GetInteractionsParams {
+  page?: number;
+  limit?: number;
+  serverId?: string;
+  command?: string;
+  status?: InteractionStatus;
+}
+
 export async function getOrCreateInteraction(data: {
   interactionId: string;
   serverId: string;
@@ -60,4 +74,37 @@ export async function markInteractionFailed(
     error,
     processedAt: new Date(),
   });
+}
+
+export async function getInteractions(
+  params: GetInteractionsParams = {},
+) {
+  const page = Math.max(1, params.page ?? 1);
+
+  const limit = Math.min(
+    100,
+    Math.max(1, params.limit ?? 20),
+  );
+
+  const result = await findInteractions({
+    page,
+    limit,
+    serverId: params.serverId,
+    command: params.command,
+    status: params.status,
+  });
+
+  return {
+    items: result.items,
+    pagination: {
+      page,
+      limit,
+      total: result.total,
+      totalPages: Math.ceil(result.total / limit),
+    },
+  };
+}
+
+export async function getInteractionById(id: string) {
+  return findInteractionById(id);
 }
