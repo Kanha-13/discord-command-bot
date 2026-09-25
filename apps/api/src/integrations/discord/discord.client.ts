@@ -16,6 +16,9 @@ export async function discordRequest<T>(
     `${process.env.DISCORD_API_BASE}${path}`,
     {
       ...options,
+      signal:
+        options.signal ??
+        AbortSignal.timeout(10_000),
       headers: {
         Authorization: `Bot ${getBotToken()}`,
         "Content-Type": "application/json",

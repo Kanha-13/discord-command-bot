@@ -8,6 +8,7 @@ import serverRouter from "./routes/server.routes"
 import configurationRouter from "./routes/configuration.routes"
 import authRouter from "./routes/auth.routes"
 import interactionRouter from "./routes/interaction.routes"
+import { errorHandler } from "./middleware/error-handler";
 
 const app = express();
 
@@ -41,5 +42,7 @@ app.get("/health", (_req, res) => {
     service: "discord-command-bot-api",
   });
 });
+
+app.use(errorHandler)
 
 export default app;

@@ -254,16 +254,11 @@ export async function handleDiscordInteraction(
       error,
     );
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unknown error.";
-
     if (!res.headersSent) {
       return res.status(500).json({
         error: {
           code: "INTERACTION_PROCESSING_FAILED",
-          message,
+          message: "Failed to process Discord interaction.",
         },
       });
     }
