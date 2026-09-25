@@ -1,18 +1,9 @@
 import { Router } from "express";
-import {
-  getServer,
-  listServerChannels,
-  listServers,
-} from "../controllers/server.controller";
 import { requireAuth } from "../middleware/require-auth";
 import { requireAdmin } from "../middleware/require-admin";
 
 const router = Router();
 
 router.use(requireAuth, requireAdmin);
-
-router.get("/", listServers);
-router.get("/:id", getServer);
-router.get("/:id/channels", listServerChannels);
 
 export default router;

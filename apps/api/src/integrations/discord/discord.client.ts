@@ -1,4 +1,3 @@
-const DISCORD_API_BASE = "https://discord.com/api/v10";
 
 function getBotToken(): string {
   const token = process.env.DISCORD_BOT_TOKEN;
@@ -14,7 +13,7 @@ export async function discordRequest<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const response = await fetch(
-    `${DISCORD_API_BASE}${path}`,
+    `${process.env.DISCORD_API_BASE}${path}`,
     {
       ...options,
       headers: {

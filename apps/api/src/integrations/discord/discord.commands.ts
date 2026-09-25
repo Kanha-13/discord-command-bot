@@ -5,8 +5,6 @@ dotenv.config({
   path: path.resolve(__dirname, "../../../../../.env"),
 });
 
-const DISCORD_API_BASE = "https://discord.com/api/v10";
-
 const applicationId = process.env.DISCORD_APPLICATION_ID;
 const botToken = process.env.DISCORD_BOT_TOKEN;
 
@@ -37,7 +35,7 @@ const commands = [
 
 export async function registerGlobalCommands() {
   const response = await fetch(
-    `${DISCORD_API_BASE}/applications/${applicationId}/commands`,
+    `${process.env.DISCORD_API_BASE}/applications/${applicationId}/commands`,
     {
       method: "PUT",
       headers: {

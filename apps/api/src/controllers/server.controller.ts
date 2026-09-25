@@ -6,6 +6,10 @@ import {
   getServers,
 } from "../services/server.service";
 
+interface IdParams {
+  id: string;
+}
+
 export async function listServers(
   _req: Request,
   res: Response,
@@ -18,7 +22,7 @@ export async function listServers(
 }
 
 export async function getServer(
-  req: Request,
+  req: Request<IdParams>,
   res: Response,
 ) {
   const server = await getServerById(req.params.id);
@@ -38,7 +42,7 @@ export async function getServer(
 }
 
 export async function listServerChannels(
-  req: Request,
+  req: Request<IdParams>,
   res: Response,
 ) {
   try {

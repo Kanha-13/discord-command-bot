@@ -6,8 +6,12 @@ import {
 } from "../services/configuration.service";
 import { serverConfigurationSchema } from "../utils/validation";
 
+interface IdParams {
+  id: string;
+}
+
 export async function getConfiguration(
-  req: Request,
+  req: Request<IdParams>,
   res: Response,
 ) {
   const configuration =
@@ -28,7 +32,7 @@ export async function getConfiguration(
 }
 
 export async function updateConfiguration(
-  req: Request,
+  req: Request<IdParams>,
   res: Response,
 ) {
 
