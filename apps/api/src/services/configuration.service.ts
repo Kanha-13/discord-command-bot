@@ -1,3 +1,4 @@
+import { findById } from "../repositories/server.repository";
 import {
   findByServerId,
   upsertConfiguration,
@@ -14,9 +15,14 @@ export async function saveServerConfiguration(data: {
   commandChannelId: string;
   mirrorChannelId: string;
 }) {
+  const server = await findById(data.serverId);
+
+  if (!server) {
+    throw new Error("SERVER_NOT_FOUND");
+  }
+
   if (
-    data.commandChannelId ===
-    data.mirrorChannelId
+    data.commandChannelId === data.mirrorChannelId
   ) {
     throw new Error(
       "Command and mirror channels must be different.",
