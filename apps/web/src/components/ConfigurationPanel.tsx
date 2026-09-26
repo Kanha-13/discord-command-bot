@@ -6,6 +6,7 @@ import {
   saveServerConfiguration,
 } from "../services/server.service";
 import type {
+  CommandConfiguration,
   DiscordChannel,
   ServerConfiguration,
 } from "../types/server";
@@ -29,6 +30,10 @@ export default function ConfigurationPanel({
 
   const [mirrorChannelId, setMirrorChannelId] =
     useState("");
+
+  const [commands, setCommands] = useState<
+    CommandConfiguration[]
+  >([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -66,6 +71,9 @@ export default function ConfigurationPanel({
         setMirrorChannelId(
           serverConfig?.mirrorChannelId ?? "",
         );
+
+        setCommands(serverConfig?.commands ?? []);
+
       } catch (err) {
         if (!cancelled) {
           setError(
@@ -87,6 +95,22 @@ export default function ConfigurationPanel({
       cancelled = true;
     };
   }, [serverId]);
+
+  function updateCommandConfiguration(
+    commandName: string,
+    updates: Partial<CommandConfiguration>,
+  ) {
+    setCommands((currentCommands) =>
+      currentCommands.map((command) =>
+        command.commandName === commandName
+          ? {
+            ...command,
+            ...updates,
+          }
+          : command,
+      ),
+    );
+  }
 
   async function handleSave() {
     setError("");
@@ -114,6 +138,7 @@ export default function ConfigurationPanel({
         {
           commandChannelId,
           mirrorChannelId,
+          commands
         },
       );
 
@@ -172,6 +197,83 @@ export default function ConfigurationPanel({
           options={channelOptions}
           onChange={setMirrorChannelId}
         />
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold">
+            Command Rules
+          </h3>
+
+          <p className="text-sm text-gray-500">
+            Configure which commands are enabled and
+            where they can be used.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {commands.map((command) => (
+            <div
+              key={command.commandName}
+              className="flex items-center gap-4 rounded-lg border p-4"
+            >
+              <div className="min-w-24">
+                <span className="font-medium">
+                  /{command.commandName}
+                </span>
+              </div>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={command.enabled}
+                  onChange={(event) =>
+                    updateCommandConfiguration(
+                      command.commandName,
+                      {
+                        enabled:
+                          event.target.checked,
+                      },
+                    )
+                  }
+                />
+
+                <span className="text-sm">
+                  Enabled
+                </span>
+              </label>
+
+              <select
+                value={command.channelId}
+                disabled={!command.enabled}
+                onChange={(event) =>
+                  updateCommandConfiguration(
+                    command.commandName,
+                    {
+                      channelId:
+                        event.target.value,
+                    },
+                  )
+                }
+                className="flex-1 rounded-md border px-3 py-2"
+              >
+                {channels
+                  .filter(
+                    (channel) =>
+                      channel.id !== mirrorChannelId,
+                  )
+                  .map((channel) => (
+                    <option
+                      key={channel.id}
+                      value={channel.id}
+                    >
+                      #{channel.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          ))}
+        </div>
       </div>
 
       {error && (

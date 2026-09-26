@@ -1,6 +1,7 @@
 import { apiRequest } from "./api";
 import type {
   ApiResponse,
+  CommandConfiguration,
   DiscordChannel,
   DiscordServer,
   ServerConfiguration,
@@ -37,6 +38,7 @@ export async function saveServerConfiguration(
   configuration: {
     commandChannelId: string;
     mirrorChannelId: string;
+    commands: CommandConfiguration[];
   },
 ) {
   const response = await apiRequest<

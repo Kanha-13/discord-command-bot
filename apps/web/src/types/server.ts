@@ -17,8 +17,15 @@ export interface ServerConfiguration {
   serverId: string;
   commandChannelId: string;
   mirrorChannelId: string;
+  commands: CommandConfiguration[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CommandConfiguration {
+  commandName: string;
+  enabled: boolean;
+  channelId: string;
 }
 
 export interface ApiResponse<T> {
