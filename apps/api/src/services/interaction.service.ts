@@ -30,6 +30,7 @@ export async function getOrCreateInteraction(data: {
   commandName: string;
   payload: object;
   createMirrorAction?: boolean;
+  createAIAction?: boolean;
 }) {
   const existing = await findByInteractionId(
     data.interactionId,
@@ -47,6 +48,7 @@ export async function getOrCreateInteraction(data: {
 
     await createActions(interaction.id, {
       mirror: data.createMirrorAction ?? true,
+      ai: data.createAIAction ?? false,
     });
 
     return {

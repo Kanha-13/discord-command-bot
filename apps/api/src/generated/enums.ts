@@ -28,7 +28,8 @@ export type InteractionStatus = (typeof InteractionStatus)[keyof typeof Interact
 
 export const ActionType = {
   DISCORD_RESPONSE: 'DISCORD_RESPONSE',
-  MIRROR_NOTIFICATION: 'MIRROR_NOTIFICATION'
+  MIRROR_NOTIFICATION: 'MIRROR_NOTIFICATION',
+  AI_ANALYSIS: 'AI_ANALYSIS'
 } as const
 
 export type ActionType = (typeof ActionType)[keyof typeof ActionType]

@@ -6,7 +6,8 @@ export type InteractionStatus =
 
 export type ActionType =
   | "DISCORD_RESPONSE"
-  | "MIRROR_NOTIFICATION";
+  | "MIRROR_NOTIFICATION"
+  | "AI_ANALYSIS";
 
 export type ActionStatus =
   | "PENDING"

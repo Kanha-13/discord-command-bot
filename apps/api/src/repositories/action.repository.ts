@@ -5,9 +5,10 @@ export async function createActions(
   interactionId: string,
   options: {
     mirror?: boolean;
+    ai?: boolean;
   } = {},
 ) {
-  const { mirror = true } = options;
+  const { mirror = true, ai = false } = options;
 
   const data: Prisma.ActionCreateManyInput[] = [
     {
@@ -15,6 +16,13 @@ export async function createActions(
       type: "DISCORD_RESPONSE",
     },
   ];
+
+  if (ai) {
+    data.push({
+      interactionId,
+      type: "AI_ANALYSIS",
+    });
+  }
 
   if (mirror) {
     data.push({
@@ -43,7 +51,7 @@ export async function findActionsByInteractionId(
 
 export async function findAction(
   interactionId: string,
-  type: "DISCORD_RESPONSE" | "MIRROR_NOTIFICATION",
+  type: "DISCORD_RESPONSE" | "MIRROR_NOTIFICATION" | "AI_ANALYSIS",
 ) {
   return prisma.action.findFirst({
     where: {

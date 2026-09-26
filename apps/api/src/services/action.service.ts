@@ -12,6 +12,7 @@ import {
 import {
   getServerConfiguration,
 } from "./configuration.service";
+import { analyzeReport } from "./ai.services";
 
 const MAX_ATTEMPTS = 3;
 
@@ -114,6 +115,96 @@ export async function executeMirrorAction(data: {
   }
 
   return false;
+}
+
+export async function executeAIAction(data: {
+  interactionId: string;
+  report: string;
+}) {
+  const action = await findAction(
+    data.interactionId,
+    "AI_ANALYSIS",
+  );
+
+  if (!action) {
+    throw new Error(
+      "AI analysis action was not found.",
+    );
+  }
+
+  for (
+    let attempt = 1;
+    attempt <= MAX_ATTEMPTS;
+    attempt++
+  ) {
+    await updateAction(action.id, {
+      status: "PROCESSING",
+      attempts: attempt,
+      error: undefined,
+    });
+
+    const actionAttempt =
+      await createActionAttempt({
+        actionId: action.id,
+        attempt,
+      });
+
+    try {
+      const analysis = await analyzeReport(
+        data.report,
+      );
+
+      await updateActionAttempt(
+        actionAttempt.id,
+        {
+          status: "SUCCESS",
+          completedAt: new Date(),
+        },
+      );
+
+      await updateAction(action.id, {
+        status: "SUCCESS",
+        attempts: attempt,
+        completedAt: new Date(),
+      });
+
+      return analysis;
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unknown AI error.";
+
+      await updateActionAttempt(
+        actionAttempt.id,
+        {
+          status: "FAILED",
+          error: message,
+          completedAt: new Date(),
+        },
+      );
+
+      await updateAction(action.id, {
+        status:
+          attempt === MAX_ATTEMPTS
+            ? "FAILED"
+            : "PROCESSING",
+        attempts: attempt,
+        error: message,
+      });
+
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise((resolve) =>
+          setTimeout(
+            resolve,
+            getRetryDelay(attempt),
+          ),
+        );
+      }
+    }
+  }
+
+  return null;
 }
 
 export async function markDiscordResponseSuccess(

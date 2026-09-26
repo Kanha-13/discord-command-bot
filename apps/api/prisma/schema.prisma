@@ -21,6 +21,7 @@ enum InteractionStatus {
 enum ActionType {
   DISCORD_RESPONSE
   MIRROR_NOTIFICATION
+  AI_ANALYSIS
 }
 
 enum ActionStatus {

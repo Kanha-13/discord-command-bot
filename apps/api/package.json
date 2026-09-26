@@ -16,6 +16,7 @@
     "discord:register": "tsx src/scripts/register-discord-commands.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.24.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "7",
     "cookie-parser": "^1.4.7",

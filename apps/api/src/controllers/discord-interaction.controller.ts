@@ -20,12 +20,14 @@ import {
 } from "../services/command.service";
 
 import {
+  executeAIAction,
   executeMirrorAction,
   markDiscordResponseSuccess,
 } from "../services/action.service";
 
 import { openReportModal, sendInteractionFollowUp, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
 import { getCommand } from "../commands/command.registry";
+import { analyzeReport } from "../services/ai.services";
 
 function getModalValue(
   interaction: DiscordInteraction,
@@ -213,11 +215,40 @@ async function processModalSubmission(
       interactionId,
     );
 
+    let analysis = null;
+
     try {
+      analysis = await executeAIAction({
+        interactionId,
+        report,
+      });
+    } catch (error) {
+      console.error(
+        "AI analysis action failed:",
+        error,
+      );
+    }
+
+    try {
+      let mirrorMessage = result.mirrorNotification;
+
+      if (analysis) {
+        mirrorMessage += `
+
+        🤖 AI Analysis
+        Category: ${analysis.category}
+        Severity: ${analysis.severity}
+        Summary: ${analysis.summary}`;
+              } else {
+                mirrorMessage += `
+              
+        🤖 AI Analysis
+        Unavailable`;
+      }
       await executeMirrorAction({
         interactionId,
         serverId,
-        message: result.mirrorNotification,
+        message: mirrorMessage,
       });
     } catch (error) {
       console.error(
@@ -379,6 +410,7 @@ export async function handleDiscordInteraction(
           commandName:
             `modal:${interaction.data?.custom_id ?? "unknown"}`,
           payload: interaction,
+          createAIAction: true,
         });
 
       if (interactionRecord.duplicate) {
