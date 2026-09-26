@@ -63,8 +63,9 @@ model DiscordServer {
   name    String
   iconUrl String?
 
-  configuration ServerConfiguration?
-  interactions  CommandInteraction[]
+  configuration        ServerConfiguration?
+  commandConfigurations CommandConfiguration[]
+  interactions          CommandInteraction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -98,7 +99,7 @@ model CommandInteraction {
   error       String?
   processedAt DateTime?
 
-  server DiscordServer @relation(fields: [serverId], references: [id])
+  server DiscordServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   actions Action[]
 
@@ -122,8 +123,24 @@ model Action {
 
   createdAt   DateTime  @default(now())
   completedAt DateTime?
-  
+
   @@index([interactionId])
   @@index([status])
   @@index([type, status])
+}
+
+model CommandConfiguration {
+  id          String  @id @default(cuid())
+  serverId    String
+  commandName String
+  enabled     Boolean @default(true)
+  channelId   String
+
+  server DiscordServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([serverId, commandName])
+  @@index([serverId])
 }

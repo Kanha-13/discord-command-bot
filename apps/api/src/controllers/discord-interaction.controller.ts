@@ -34,15 +34,24 @@ async function processInteraction(
   try {
     const channelCheck =
       await isCommandAllowedInChannel(
-        serverId,
+        interaction.guild_id as string,
+        interaction.data?.name as string,
         interaction.channel_id!,
       );
 
     if (!channelCheck.allowed) {
-      const message =
-        channelCheck.reason === "NOT_CONFIGURED"
-          ? "⚠️ This server has not been configured yet."
-          : "⚠️ This command is not enabled in this channel.";
+      let message =
+        "⚠️ This command is not enabled in this channel.";
+
+      if (channelCheck.reason === "NOT_CONFIGURED") {
+        message =
+          "⚠️ This server has not been configured yet.";
+      }
+
+      if (channelCheck.reason === "COMMAND_DISABLED") {
+        message =
+          "⚠️ This command is currently disabled.";
+      }
 
       await sendInteractionFollowUp(
         interaction.application_id,

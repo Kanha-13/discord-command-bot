@@ -1,14 +1,18 @@
 import { z } from "zod";
 
+export const commandConfigurationSchema = z.object({
+  commandName: z.string().min(1),
+  enabled: z.boolean(),
+  channelId: z.string().min(1),
+});
+
 export const serverConfigurationSchema =
   z.object({
-    commandChannelId: z
-      .string()
-      .min(1),
-
-    mirrorChannelId: z
-      .string()
-      .min(1),
+    commandChannelId: z.string().min(1),
+    mirrorChannelId: z.string().min(1),
+    commands: z
+      .array(commandConfigurationSchema)
+      .default([]),
   });
 
 export const interactionQuerySchema = z.object({

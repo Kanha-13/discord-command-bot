@@ -66,6 +66,7 @@ describe("action.service", () => {
         mirrorChannelId: "mirror-channel",
         createdAt: new Date(),
         updatedAt: new Date(),
+        commands: [],
       });
 
       mockedSendChannelMessage.mockResolvedValue({
@@ -131,6 +132,7 @@ describe("action.service", () => {
         mirrorChannelId: "mirror-channel",
         createdAt: new Date(),
         updatedAt: new Date(),
+        commands: [],
       });
 
       mockedSendChannelMessage
@@ -206,6 +208,7 @@ describe("action.service", () => {
         mirrorChannelId: "mirror-channel",
         createdAt: new Date(),
         updatedAt: new Date(),
+        commands: [],
       });
 
       mockedSendChannelMessage.mockRejectedValue(

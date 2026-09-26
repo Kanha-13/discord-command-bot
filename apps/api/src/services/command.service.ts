@@ -12,6 +12,11 @@ import type {
 
 import { getInteractionConfiguration } from "../services/interaction.service";
 
+import {
+  getCommandConfiguration,
+} from "./command-configuration.service";
+
+
 export async function executeCommand(
   interaction: DiscordInteraction,
 ) {
@@ -57,12 +62,44 @@ export async function executeCommand(
 
 export async function isCommandAllowedInChannel(
   serverId: string,
+  commandName: string,
   channelId: string,
 ) {
-  const configuration =
+  const commandConfiguration =
+    await getCommandConfiguration(
+      serverId,
+      commandName,
+    );
+
+  if (commandConfiguration) {
+    if (!commandConfiguration.enabled) {
+      return {
+        allowed: false,
+        reason: "COMMAND_DISABLED" as const,
+      };
+    }
+
+    if (
+      commandConfiguration.channelId !== channelId
+    ) {
+      return {
+        allowed: false,
+        reason: "INVALID_CHANNEL" as const,
+      };
+    }
+
+    return {
+      allowed: true,
+      reason: null,
+    };
+  }
+
+  // Backward-compatible fallback for servers
+  // that have not created command-specific rules.
+  const serverConfiguration =
     await getInteractionConfiguration(serverId);
 
-  if (!configuration) {
+  if (!serverConfiguration) {
     return {
       allowed: false,
       reason: "NOT_CONFIGURED" as const,
@@ -70,7 +107,7 @@ export async function isCommandAllowedInChannel(
   }
 
   if (
-    configuration.commandChannelId !== channelId
+    serverConfiguration.commandChannelId !== channelId
   ) {
     return {
       allowed: false,

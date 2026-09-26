@@ -191,6 +191,7 @@ export type DiscordServerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DiscordServer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DiscordServer"> | Date | string
   configuration?: Prisma.XOR<Prisma.ServerConfigurationNullableScalarRelationFilter, Prisma.ServerConfigurationWhereInput> | null
+  commandConfigurations?: Prisma.CommandConfigurationListRelationFilter
   interactions?: Prisma.CommandInteractionListRelationFilter
 }
 
@@ -202,6 +203,7 @@ export type DiscordServerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   configuration?: Prisma.ServerConfigurationOrderByWithRelationInput
+  commandConfigurations?: Prisma.CommandConfigurationOrderByRelationAggregateInput
   interactions?: Prisma.CommandInteractionOrderByRelationAggregateInput
 }
 
@@ -216,6 +218,7 @@ export type DiscordServerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DiscordServer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DiscordServer"> | Date | string
   configuration?: Prisma.XOR<Prisma.ServerConfigurationNullableScalarRelationFilter, Prisma.ServerConfigurationWhereInput> | null
+  commandConfigurations?: Prisma.CommandConfigurationListRelationFilter
   interactions?: Prisma.CommandInteractionListRelationFilter
 }, "id" | "guildId">
 
@@ -251,6 +254,7 @@ export type DiscordServerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   configuration?: Prisma.ServerConfigurationCreateNestedOneWithoutServerInput
+  commandConfigurations?: Prisma.CommandConfigurationCreateNestedManyWithoutServerInput
   interactions?: Prisma.CommandInteractionCreateNestedManyWithoutServerInput
 }
 
@@ -262,6 +266,7 @@ export type DiscordServerUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   configuration?: Prisma.ServerConfigurationUncheckedCreateNestedOneWithoutServerInput
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedCreateNestedManyWithoutServerInput
   interactions?: Prisma.CommandInteractionUncheckedCreateNestedManyWithoutServerInput
 }
 
@@ -273,6 +278,7 @@ export type DiscordServerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   configuration?: Prisma.ServerConfigurationUpdateOneWithoutServerNestedInput
+  commandConfigurations?: Prisma.CommandConfigurationUpdateManyWithoutServerNestedInput
   interactions?: Prisma.CommandInteractionUpdateManyWithoutServerNestedInput
 }
 
@@ -284,6 +290,7 @@ export type DiscordServerUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   configuration?: Prisma.ServerConfigurationUncheckedUpdateOneWithoutServerNestedInput
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedUpdateManyWithoutServerNestedInput
   interactions?: Prisma.CommandInteractionUncheckedUpdateManyWithoutServerNestedInput
 }
 
@@ -374,6 +381,20 @@ export type DiscordServerUpdateOneRequiredWithoutInteractionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DiscordServerUpdateToOneWithWhereWithoutInteractionsInput, Prisma.DiscordServerUpdateWithoutInteractionsInput>, Prisma.DiscordServerUncheckedUpdateWithoutInteractionsInput>
 }
 
+export type DiscordServerCreateNestedOneWithoutCommandConfigurationsInput = {
+  create?: Prisma.XOR<Prisma.DiscordServerCreateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedCreateWithoutCommandConfigurationsInput>
+  connectOrCreate?: Prisma.DiscordServerCreateOrConnectWithoutCommandConfigurationsInput
+  connect?: Prisma.DiscordServerWhereUniqueInput
+}
+
+export type DiscordServerUpdateOneRequiredWithoutCommandConfigurationsNestedInput = {
+  create?: Prisma.XOR<Prisma.DiscordServerCreateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedCreateWithoutCommandConfigurationsInput>
+  connectOrCreate?: Prisma.DiscordServerCreateOrConnectWithoutCommandConfigurationsInput
+  upsert?: Prisma.DiscordServerUpsertWithoutCommandConfigurationsInput
+  connect?: Prisma.DiscordServerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DiscordServerUpdateToOneWithWhereWithoutCommandConfigurationsInput, Prisma.DiscordServerUpdateWithoutCommandConfigurationsInput>, Prisma.DiscordServerUncheckedUpdateWithoutCommandConfigurationsInput>
+}
+
 export type DiscordServerCreateWithoutConfigurationInput = {
   id?: string
   guildId: string
@@ -381,6 +402,7 @@ export type DiscordServerCreateWithoutConfigurationInput = {
   iconUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  commandConfigurations?: Prisma.CommandConfigurationCreateNestedManyWithoutServerInput
   interactions?: Prisma.CommandInteractionCreateNestedManyWithoutServerInput
 }
 
@@ -391,6 +413,7 @@ export type DiscordServerUncheckedCreateWithoutConfigurationInput = {
   iconUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedCreateNestedManyWithoutServerInput
   interactions?: Prisma.CommandInteractionUncheckedCreateNestedManyWithoutServerInput
 }
 
@@ -417,6 +440,7 @@ export type DiscordServerUpdateWithoutConfigurationInput = {
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commandConfigurations?: Prisma.CommandConfigurationUpdateManyWithoutServerNestedInput
   interactions?: Prisma.CommandInteractionUpdateManyWithoutServerNestedInput
 }
 
@@ -427,6 +451,7 @@ export type DiscordServerUncheckedUpdateWithoutConfigurationInput = {
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedUpdateManyWithoutServerNestedInput
   interactions?: Prisma.CommandInteractionUncheckedUpdateManyWithoutServerNestedInput
 }
 
@@ -438,6 +463,7 @@ export type DiscordServerCreateWithoutInteractionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   configuration?: Prisma.ServerConfigurationCreateNestedOneWithoutServerInput
+  commandConfigurations?: Prisma.CommandConfigurationCreateNestedManyWithoutServerInput
 }
 
 export type DiscordServerUncheckedCreateWithoutInteractionsInput = {
@@ -448,6 +474,7 @@ export type DiscordServerUncheckedCreateWithoutInteractionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   configuration?: Prisma.ServerConfigurationUncheckedCreateNestedOneWithoutServerInput
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedCreateNestedManyWithoutServerInput
 }
 
 export type DiscordServerCreateOrConnectWithoutInteractionsInput = {
@@ -474,6 +501,7 @@ export type DiscordServerUpdateWithoutInteractionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   configuration?: Prisma.ServerConfigurationUpdateOneWithoutServerNestedInput
+  commandConfigurations?: Prisma.CommandConfigurationUpdateManyWithoutServerNestedInput
 }
 
 export type DiscordServerUncheckedUpdateWithoutInteractionsInput = {
@@ -484,6 +512,67 @@ export type DiscordServerUncheckedUpdateWithoutInteractionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   configuration?: Prisma.ServerConfigurationUncheckedUpdateOneWithoutServerNestedInput
+  commandConfigurations?: Prisma.CommandConfigurationUncheckedUpdateManyWithoutServerNestedInput
+}
+
+export type DiscordServerCreateWithoutCommandConfigurationsInput = {
+  id?: string
+  guildId: string
+  name: string
+  iconUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  configuration?: Prisma.ServerConfigurationCreateNestedOneWithoutServerInput
+  interactions?: Prisma.CommandInteractionCreateNestedManyWithoutServerInput
+}
+
+export type DiscordServerUncheckedCreateWithoutCommandConfigurationsInput = {
+  id?: string
+  guildId: string
+  name: string
+  iconUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  configuration?: Prisma.ServerConfigurationUncheckedCreateNestedOneWithoutServerInput
+  interactions?: Prisma.CommandInteractionUncheckedCreateNestedManyWithoutServerInput
+}
+
+export type DiscordServerCreateOrConnectWithoutCommandConfigurationsInput = {
+  where: Prisma.DiscordServerWhereUniqueInput
+  create: Prisma.XOR<Prisma.DiscordServerCreateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedCreateWithoutCommandConfigurationsInput>
+}
+
+export type DiscordServerUpsertWithoutCommandConfigurationsInput = {
+  update: Prisma.XOR<Prisma.DiscordServerUpdateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedUpdateWithoutCommandConfigurationsInput>
+  create: Prisma.XOR<Prisma.DiscordServerCreateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedCreateWithoutCommandConfigurationsInput>
+  where?: Prisma.DiscordServerWhereInput
+}
+
+export type DiscordServerUpdateToOneWithWhereWithoutCommandConfigurationsInput = {
+  where?: Prisma.DiscordServerWhereInput
+  data: Prisma.XOR<Prisma.DiscordServerUpdateWithoutCommandConfigurationsInput, Prisma.DiscordServerUncheckedUpdateWithoutCommandConfigurationsInput>
+}
+
+export type DiscordServerUpdateWithoutCommandConfigurationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  guildId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  configuration?: Prisma.ServerConfigurationUpdateOneWithoutServerNestedInput
+  interactions?: Prisma.CommandInteractionUpdateManyWithoutServerNestedInput
+}
+
+export type DiscordServerUncheckedUpdateWithoutCommandConfigurationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  guildId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  configuration?: Prisma.ServerConfigurationUncheckedUpdateOneWithoutServerNestedInput
+  interactions?: Prisma.CommandInteractionUncheckedUpdateManyWithoutServerNestedInput
 }
 
 
@@ -492,10 +581,12 @@ export type DiscordServerUncheckedUpdateWithoutInteractionsInput = {
  */
 
 export type DiscordServerCountOutputType = {
+  commandConfigurations: number
   interactions: number
 }
 
 export type DiscordServerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commandConfigurations?: boolean | DiscordServerCountOutputTypeCountCommandConfigurationsArgs
   interactions?: boolean | DiscordServerCountOutputTypeCountInteractionsArgs
 }
 
@@ -507,6 +598,13 @@ export type DiscordServerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
    * Select specific fields to fetch from the DiscordServerCountOutputType
    */
   select?: Prisma.DiscordServerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DiscordServerCountOutputType without action
+ */
+export type DiscordServerCountOutputTypeCountCommandConfigurationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommandConfigurationWhereInput
 }
 
 /**
@@ -525,6 +623,7 @@ export type DiscordServerSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   configuration?: boolean | Prisma.DiscordServer$configurationArgs<ExtArgs>
+  commandConfigurations?: boolean | Prisma.DiscordServer$commandConfigurationsArgs<ExtArgs>
   interactions?: boolean | Prisma.DiscordServer$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.DiscordServerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["discordServer"]>
@@ -559,6 +658,7 @@ export type DiscordServerSelectScalar = {
 export type DiscordServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "guildId" | "name" | "iconUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["discordServer"]>
 export type DiscordServerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   configuration?: boolean | Prisma.DiscordServer$configurationArgs<ExtArgs>
+  commandConfigurations?: boolean | Prisma.DiscordServer$commandConfigurationsArgs<ExtArgs>
   interactions?: boolean | Prisma.DiscordServer$interactionsArgs<ExtArgs>
   _count?: boolean | Prisma.DiscordServerCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -569,6 +669,7 @@ export type $DiscordServerPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "DiscordServer"
   objects: {
     configuration: Prisma.$ServerConfigurationPayload<ExtArgs> | null
+    commandConfigurations: Prisma.$CommandConfigurationPayload<ExtArgs>[]
     interactions: Prisma.$CommandInteractionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -973,6 +1074,7 @@ readonly fields: DiscordServerFieldRefs;
 export interface Prisma__DiscordServerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   configuration<T extends Prisma.DiscordServer$configurationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DiscordServer$configurationArgs<ExtArgs>>): Prisma.Prisma__ServerConfigurationClient<runtime.Types.Result.GetResult<Prisma.$ServerConfigurationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  commandConfigurations<T extends Prisma.DiscordServer$commandConfigurationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DiscordServer$commandConfigurationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.DiscordServer$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DiscordServer$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommandInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1418,6 +1520,30 @@ export type DiscordServer$configurationArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.ServerConfigurationInclude<ExtArgs> | null
   where?: Prisma.ServerConfigurationWhereInput
+}
+
+/**
+ * DiscordServer.commandConfigurations
+ */
+export type DiscordServer$commandConfigurationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommandConfiguration
+   */
+  select?: Prisma.CommandConfigurationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommandConfiguration
+   */
+  omit?: Prisma.CommandConfigurationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommandConfigurationInclude<ExtArgs> | null
+  where?: Prisma.CommandConfigurationWhereInput
+  orderBy?: Prisma.CommandConfigurationOrderByWithRelationInput | Prisma.CommandConfigurationOrderByWithRelationInput[]
+  cursor?: Prisma.CommandConfigurationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommandConfigurationScalarFieldEnum | Prisma.CommandConfigurationScalarFieldEnum[]
 }
 
 /**

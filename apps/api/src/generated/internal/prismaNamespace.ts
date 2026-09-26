@@ -402,7 +402,8 @@ export const ModelName = {
   DiscordServer: 'DiscordServer',
   ServerConfiguration: 'ServerConfiguration',
   CommandInteraction: 'CommandInteraction',
-  Action: 'Action'
+  Action: 'Action',
+  CommandConfiguration: 'CommandConfiguration'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "discordServer" | "serverConfiguration" | "commandInteraction" | "action"
+    modelProps: "user" | "session" | "discordServer" | "serverConfiguration" | "commandInteraction" | "action" | "commandConfiguration"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -866,6 +867,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CommandConfiguration: {
+      payload: Prisma.$CommandConfigurationPayload<ExtArgs>
+      fields: Prisma.CommandConfigurationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommandConfigurationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommandConfigurationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        findFirst: {
+          args: Prisma.CommandConfigurationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommandConfigurationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        findMany: {
+          args: Prisma.CommandConfigurationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>[]
+        }
+        create: {
+          args: Prisma.CommandConfigurationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        createMany: {
+          args: Prisma.CommandConfigurationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommandConfigurationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>[]
+        }
+        delete: {
+          args: Prisma.CommandConfigurationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        update: {
+          args: Prisma.CommandConfigurationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommandConfigurationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommandConfigurationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommandConfigurationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommandConfigurationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommandConfigurationPayload>
+        }
+        aggregate: {
+          args: Prisma.CommandConfigurationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommandConfiguration>
+        }
+        groupBy: {
+          args: Prisma.CommandConfigurationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommandConfigurationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommandConfigurationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommandConfigurationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -983,6 +1058,19 @@ export const ActionScalarFieldEnum = {
 } as const
 
 export type ActionScalarFieldEnum = (typeof ActionScalarFieldEnum)[keyof typeof ActionScalarFieldEnum]
+
+
+export const CommandConfigurationScalarFieldEnum = {
+  id: 'id',
+  serverId: 'serverId',
+  commandName: 'commandName',
+  enabled: 'enabled',
+  channelId: 'channelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommandConfigurationScalarFieldEnum = (typeof CommandConfigurationScalarFieldEnum)[keyof typeof CommandConfigurationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1140,6 +1228,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1313,6 +1408,7 @@ export type GlobalOmitConfig = {
   serverConfiguration?: Prisma.ServerConfigurationOmit
   commandInteraction?: Prisma.CommandInteractionOmit
   action?: Prisma.ActionOmit
+  commandConfiguration?: Prisma.CommandConfigurationOmit
 }
 
 /* Types for Logging */

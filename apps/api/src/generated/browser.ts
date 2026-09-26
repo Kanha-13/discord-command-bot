@@ -47,3 +47,8 @@ export type CommandInteraction = Prisma.CommandInteractionModel
  * 
  */
 export type Action = Prisma.ActionModel
+/**
+ * Model CommandConfiguration
+ * 
+ */
+export type CommandConfiguration = Prisma.CommandConfigurationModel

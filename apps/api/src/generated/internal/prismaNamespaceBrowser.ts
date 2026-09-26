@@ -56,7 +56,8 @@ export const ModelName = {
   DiscordServer: 'DiscordServer',
   ServerConfiguration: 'ServerConfiguration',
   CommandInteraction: 'CommandInteraction',
-  Action: 'Action'
+  Action: 'Action',
+  CommandConfiguration: 'CommandConfiguration'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -153,6 +154,19 @@ export const ActionScalarFieldEnum = {
 } as const
 
 export type ActionScalarFieldEnum = (typeof ActionScalarFieldEnum)[keyof typeof ActionScalarFieldEnum]
+
+
+export const CommandConfigurationScalarFieldEnum = {
+  id: 'id',
+  serverId: 'serverId',
+  commandName: 'commandName',
+  enabled: 'enabled',
+  channelId: 'channelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommandConfigurationScalarFieldEnum = (typeof CommandConfigurationScalarFieldEnum)[keyof typeof CommandConfigurationScalarFieldEnum]
 
 
 export const SortOrder = {
