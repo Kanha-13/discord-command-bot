@@ -98,3 +98,7 @@ One example of how I used AI during development was asking it to reason through 
 > "I need to handle Discord slash commands while respecting the three-second initial response requirement. How should I structure the interaction endpoint, persistence, deferred response, downstream actions, retries, and duplicate interaction handling so that a temporary failure doesn't silently lose an operation?"
 
 I then adapted the suggested approach to the application's existing Prisma data model and tested each part against the actual Discord behavior.
+
+## AI AGENTS 
+
+AI agents were not used in this project. The AI integration uses Gemini directly for report classification, severity detection, and summarization. ChatGPT was used as a development assistant for architecture, debugging, implementation guidance, and code review, rather than as an autonomous agent.
