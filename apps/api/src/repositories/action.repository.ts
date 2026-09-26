@@ -1,19 +1,30 @@
 import { prisma } from "../configs/database";
+import { Prisma } from "../generated/client";
 
 export async function createActions(
   interactionId: string,
+  options: {
+    mirror?: boolean;
+  } = {},
 ) {
+  const { mirror = true } = options;
+
+  const data: Prisma.ActionCreateManyInput[] = [
+    {
+      interactionId,
+      type: "DISCORD_RESPONSE",
+    },
+  ];
+
+  if (mirror) {
+    data.push({
+      interactionId,
+      type: "MIRROR_NOTIFICATION",
+    });
+  }
+
   return prisma.action.createMany({
-    data: [
-      {
-        interactionId,
-        type: "DISCORD_RESPONSE",
-      },
-      {
-        interactionId,
-        type: "MIRROR_NOTIFICATION",
-      },
-    ],
+    data,
   });
 }
 

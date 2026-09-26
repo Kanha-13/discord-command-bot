@@ -24,7 +24,7 @@ import {
   markDiscordResponseSuccess,
 } from "../services/action.service";
 
-import { sendInteractionFollowUp } from "../integrations/discord/discord.interactions";
+import { sendInteractionFollowUp, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
 
 async function processInteraction(
   interaction: DiscordInteraction,
@@ -77,6 +77,9 @@ async function processInteraction(
       interaction.application_id,
       interaction.token,
       result.response,
+      interaction.data?.name === "status"
+        ? statusRefreshButton
+        : undefined,
     );
 
     await markDiscordResponseSuccess(
@@ -123,6 +126,59 @@ async function processInteraction(
   }
 }
 
+async function processComponentInteraction(
+  interaction: DiscordInteraction,
+  interactionId: string,
+) {
+  try {
+    const customId = interaction.data?.custom_id;
+
+    if (!customId) {
+      throw new Error(
+        "Component custom_id is missing.",
+      );
+    }
+
+    if (customId !== "status_refresh") {
+      throw new Error(
+        `Unsupported component: ${customId}`,
+      );
+    }
+
+    const message = `🟢 Bot is operational.`;
+
+    await updateInteractionResponse(
+      interaction.application_id,
+      interaction.token,
+      message,
+    );
+
+    await markDiscordResponseSuccess(
+      interactionId,
+    );
+
+    await markInteractionCompleted(
+      interactionId,
+      message,
+    );
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unknown error.";
+
+    await markInteractionFailed(
+      interactionId,
+      message,
+    );
+
+    console.error(
+      "Discord component interaction processing failed:",
+      error,
+    );
+  }
+}
+
 export async function handleDiscordInteraction(
   req: Request,
   res: Response,
@@ -151,16 +207,82 @@ export async function handleDiscordInteraction(
     }
 
     if (
-      interaction.type !==
-      DiscordInteractionType.APPLICATION_COMMAND
+      interaction.type ===
+      DiscordInteractionType.MESSAGE_COMPONENT
     ) {
-      return res.status(400).json({
-        error: {
-          code: "UNSUPPORTED_INTERACTION",
-          message:
-            "Unsupported Discord interaction type.",
-        },
+      if (!interaction.guild_id) {
+        return res.status(400).json({
+          error: {
+            code: "GUILD_REQUIRED",
+            message:
+              "This interaction must be used inside a Discord server.",
+          },
+        });
+      }
+
+      if (!interaction.channel_id) {
+        return res.status(400).json({
+          error: {
+            code: "CHANNEL_REQUIRED",
+            message:
+              "Discord channel information is missing.",
+          },
+        });
+      }
+
+      const user =
+        interaction.member?.user ??
+        interaction.user;
+
+      if (!user) {
+        return res.status(400).json({
+          error: {
+            code: "USER_REQUIRED",
+            message:
+              "Discord user information is missing.",
+          },
+        });
+      }
+
+      const server = await getOrCreateServer({
+        guildId: interaction.guild_id,
       });
+
+      const interactionRecord =
+        await getOrCreateInteraction({
+          interactionId: interaction.id,
+          serverId: server.id,
+          channelId: interaction.channel_id,
+          userDiscordId: user.id,
+          commandName: `button:${interaction.data?.custom_id ?? "unknown"}`,
+          payload: interaction,
+          createMirrorAction: false
+        });
+
+      if (interactionRecord.duplicate) {
+        return res.status(200).json({
+          type: 4,
+          data: {
+            content:
+              "This interaction has already been processed.",
+          },
+        });
+      }
+
+      await markInteractionProcessing(
+        interactionRecord.interaction.id,
+      );
+
+      res.json({
+        type:6,
+      });
+
+      void processComponentInteraction(
+        interaction,
+        interactionRecord.interaction.id,
+      );
+
+      return;
     }
 
     if (!interaction.guild_id) {
@@ -216,7 +338,7 @@ export async function handleDiscordInteraction(
         serverId: server.id,
         channelId: interaction.channel_id,
         userDiscordId: user.id,
-        commandName: interaction.data.name,
+        commandName: interaction.data.name || "",
         payload: interaction,
       });
 

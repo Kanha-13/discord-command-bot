@@ -29,6 +29,7 @@ export async function getOrCreateInteraction(data: {
   userDiscordId: string;
   commandName: string;
   payload: object;
+  createMirrorAction?: boolean;
 }) {
   const existing = await findByInteractionId(
     data.interactionId,
@@ -44,7 +45,9 @@ export async function getOrCreateInteraction(data: {
   try {
     const interaction = await createInteraction(data);
 
-    await createActions(interaction.id);
+    await createActions(interaction.id, {
+      mirror: data.createMirrorAction ?? true,
+    });
 
     return {
       interaction,

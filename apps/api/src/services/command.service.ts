@@ -32,6 +32,10 @@ export async function executeCommand(
     throw new Error("Command channel is missing.");
   }
 
+  if (!interaction.data.name) {
+    throw new Error("Command name missing.");
+  }
+
   const command = getCommand(interaction.data.name);
 
   if (!command) {
