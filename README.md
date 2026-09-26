@@ -1173,6 +1173,23 @@ The project also includes a dedicated [`AI_NOTES.md`](./AI_NOTES.md) documenting
 
 ---
 
+## Invite the Bot to Your Discord Server
+
+You can invite the bot to your own Discord server using the following installation link:
+
+**[Add Discord Bot to Your Server](https://discord.com/oauth2/authorize?client_id=1552640853401538620&permissions=3072&integration_type=0&scope=bot+applications.commands)**
+
+After opening the link:
+
+1. Select the Discord server where you want to install the bot.
+2. Authorize the requested permissions.
+3. Return to the dashboard and sign in with Discord.
+4. Connect/configure the server and select the command and mirror channels.
+5. Run `/status` or `/report` in the configured channel to test the integration.
+
+> **Note:** You must have permission to manage the Discord server in order to install the bot.
+
+
 # License
 
 This project was created as a technical take-home assignment.
