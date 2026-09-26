@@ -34,7 +34,7 @@ async function processInteraction(
   try {
     const channelCheck =
       await isCommandAllowedInChannel(
-        interaction.guild_id as string,
+        serverId as string,
         interaction.data?.name as string,
         interaction.channel_id!,
       );
