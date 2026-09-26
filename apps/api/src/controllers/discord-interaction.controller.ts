@@ -24,7 +24,25 @@ import {
   markDiscordResponseSuccess,
 } from "../services/action.service";
 
-import { sendInteractionFollowUp, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
+import { openReportModal, sendInteractionFollowUp, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
+import { getCommand } from "../commands/command.registry";
+
+function getModalValue(
+  interaction: DiscordInteraction,
+  customId: string,
+) {
+  const rows = interaction.data?.components ?? [];
+
+  for (const row of rows) {
+    for (const component of row.components ?? []) {
+      if (component.custom_id === customId) {
+        return component.value;
+      }
+    }
+  }
+
+  return undefined;
+}
 
 async function processInteraction(
   interaction: DiscordInteraction,
@@ -126,6 +144,110 @@ async function processInteraction(
   }
 }
 
+async function processModalSubmission(
+  interaction: DiscordInteraction,
+  interactionId: string,
+  serverId: string,
+) {
+  try {
+    const customId = interaction.data?.custom_id;
+
+    if (customId !== "report_modal") {
+      throw new Error(
+        `Unsupported modal: ${customId ?? "unknown"}`,
+      );
+    }
+
+    const report = getModalValue(
+      interaction,
+      "report_text",
+    );
+
+    if (
+      typeof report !== "string" ||
+      !report.trim()
+    ) {
+      throw new Error(
+        "Report text is required.",
+      );
+    }
+
+    const user =
+      interaction.member?.user ??
+      interaction.user;
+
+    if (!user) {
+      throw new Error(
+        "Discord user information is missing.",
+      );
+    }
+
+    const command = getCommand("report");
+
+    if (!command) {
+      throw new Error(
+        "Report command is not registered.",
+      );
+    }
+
+    const result = await command.execute({
+      interactionId: interaction.id,
+      guildId: interaction.guild_id!,
+      channelId: interaction.channel_id!,
+      userDiscordId: user.id,
+      username:
+        user.global_name ??
+        user.username,
+      options: {
+        text: report,
+      },
+    });
+
+    await sendInteractionFollowUp(
+      interaction.application_id,
+      interaction.token,
+      result.response,
+    );
+
+    await markDiscordResponseSuccess(
+      interactionId,
+    );
+
+    try {
+      await executeMirrorAction({
+        interactionId,
+        serverId,
+        message: result.mirrorNotification,
+      });
+    } catch (error) {
+      console.error(
+        "Mirror notification failed:",
+        error,
+      );
+    }
+
+    await markInteractionCompleted(
+      interactionId,
+      result.response,
+    );
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unknown error.";
+
+    await markInteractionFailed(
+      interactionId,
+      message,
+    );
+
+    console.error(
+      "Discord modal submission processing failed:",
+      error,
+    );
+  }
+}
+
 async function processComponentInteraction(
   interaction: DiscordInteraction,
   interactionId: string,
@@ -208,6 +330,91 @@ export async function handleDiscordInteraction(
 
     if (
       interaction.type ===
+      DiscordInteractionType.MODAL_SUBMIT
+    ) {
+      if (!interaction.guild_id) {
+        return res.status(400).json({
+          error: {
+            code: "GUILD_REQUIRED",
+            message:
+              "This interaction must be used inside a Discord server.",
+          },
+        });
+      }
+
+      if (!interaction.channel_id) {
+        return res.status(400).json({
+          error: {
+            code: "CHANNEL_REQUIRED",
+            message:
+              "Discord channel information is missing.",
+          },
+        });
+      }
+
+      const user =
+        interaction.member?.user ??
+        interaction.user;
+
+      if (!user) {
+        return res.status(400).json({
+          error: {
+            code: "USER_REQUIRED",
+            message:
+              "Discord user information is missing.",
+          },
+        });
+      }
+
+      const server = await getOrCreateServer({
+        guildId: interaction.guild_id,
+      });
+
+      const interactionRecord =
+        await getOrCreateInteraction({
+          interactionId: interaction.id,
+          serverId: server.id,
+          channelId: interaction.channel_id,
+          userDiscordId: user.id,
+          commandName:
+            `modal:${interaction.data?.custom_id ?? "unknown"}`,
+          payload: interaction,
+        });
+
+      if (interactionRecord.duplicate) {
+        return res.status(200).json({
+          type: 4,
+          data: {
+            content:
+              "This interaction has already been processed.",
+          },
+        });
+      }
+
+      await markInteractionProcessing(
+        interactionRecord.interaction.id,
+      );
+
+      /*
+       * Type 5 here means:
+       * acknowledge the modal submission
+       * with a deferred channel message response.
+       */
+      res.json({
+        type: 5,
+      });
+
+      void processModalSubmission(
+        interaction,
+        interactionRecord.interaction.id,
+        server.id,
+      );
+
+      return;
+    }
+
+    if (
+      interaction.type ===
       DiscordInteractionType.MESSAGE_COMPONENT
     ) {
       if (!interaction.guild_id) {
@@ -256,7 +463,7 @@ export async function handleDiscordInteraction(
           userDiscordId: user.id,
           commandName: `button:${interaction.data?.custom_id ?? "unknown"}`,
           payload: interaction,
-          createMirrorAction: false
+          createMirrorAction: false,
         });
 
       if (interactionRecord.duplicate) {
@@ -274,7 +481,7 @@ export async function handleDiscordInteraction(
       );
 
       res.json({
-        type:6,
+        type: 6,
       });
 
       void processComponentInteraction(
@@ -340,6 +547,8 @@ export async function handleDiscordInteraction(
         userDiscordId: user.id,
         commandName: interaction.data.name || "",
         payload: interaction,
+        createMirrorAction:
+          interaction.data.name !== "report",
       });
 
     if (interactionRecord.duplicate) {
@@ -361,10 +570,48 @@ export async function handleDiscordInteraction(
     );
 
     /*
-     * Discord requires an interaction acknowledgement
-     * within its response window.
-     *
-     * Type 5 = deferred channel message response.
+     * /report opens a Discord modal.
+     * The modal must be the initial response to
+     * the application command, so we cannot defer it.
+     */
+    if (interaction.data.name === "report") {
+      try {
+        await openReportModal(
+          interaction.id,
+          interaction.token,
+        );
+
+        await markDiscordResponseSuccess(
+          interactionRecord.interaction.id,
+        );
+
+        await markInteractionCompleted(
+          interactionRecord.interaction.id,
+          "Report modal opened.",
+        );
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to open report modal.";
+
+        await markInteractionFailed(
+          interactionRecord.interaction.id,
+          message,
+        );
+
+        console.error(
+          "Failed to open report modal:",
+          error,
+        );
+      }
+
+      return;
+    }
+
+    /*
+     * Normal slash commands use a deferred
+     * channel message response.
      */
     res.json({
       type: 5,

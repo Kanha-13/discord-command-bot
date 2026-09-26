@@ -22,14 +22,6 @@ const commands = [
   {
     name: "report",
     description: "Submit a report.",
-    options: [
-      {
-        name: "text",
-        description: "The report text.",
-        type: 3,
-        required: true,
-      },
-    ],
   },
 ];
 

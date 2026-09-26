@@ -2,6 +2,7 @@ export const DiscordInteractionType = {
   PING: 1,
   APPLICATION_COMMAND: 2,
   MESSAGE_COMPONENT: 3,
+  MODAL_SUBMIT: 5,
 } as const;
 
 export type DiscordInteractionType =
@@ -41,7 +42,15 @@ export interface DiscordInteraction {
     custom_id?: string;
     component_type?: number;
     options?: DiscordCommandOption[];
+    components?: DiscordModalComponent[];
   };
 
   token: string;
+}
+
+export interface DiscordModalComponent {
+  type: number;
+  custom_id: string;
+  value?: string;
+  components?: DiscordModalComponent[];
 }

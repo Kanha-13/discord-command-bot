@@ -17,6 +17,20 @@ interface DiscordActionRow {
   components: DiscordButton[];
 }
 
+export const statusRefreshButton: DiscordActionRow[] = [
+  {
+    type: 1,
+    components: [
+      {
+        type: 2,
+        style: 1,
+        label: "Refresh Status",
+        custom_id: "status_refresh",
+      },
+    ],
+  },
+];
+
 export async function sendInteractionFollowUp(
   applicationId: string,
   interactionToken: string,
@@ -33,11 +47,6 @@ export async function sendInteractionFollowUp(
       }),
     },
   );
-}
-
-interface InteractionMessageResponse {
-  id: string;
-  content: string;
 }
 
 export async function sendInteractionResponse(
@@ -59,6 +68,42 @@ export async function sendInteractionResponse(
   );
 }
 
+export async function openReportModal(
+  interactionId: string,
+  interactionToken: string,
+) {
+  return discordRequest(
+    `/interactions/${interactionId}/${interactionToken}/callback`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        type: 9,
+        data: {
+          custom_id: "report_modal",
+          title: "Submit a Report",
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 4,
+                  custom_id: "report_text",
+                  label: "Report",
+                  style: 2,
+                  placeholder: "Describe the issue...",
+                  required: true,
+                  min_length: 1,
+                  max_length: 1000,
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    },
+  );
+}
+
 export async function updateInteractionResponse(
   applicationId: string,
   interactionToken: string,
@@ -75,17 +120,3 @@ export async function updateInteractionResponse(
     },
   );
 }
-
-export const statusRefreshButton: DiscordActionRow[] = [
-  {
-    type: 1,
-    components: [
-      {
-        type: 2,
-        style: 1,
-        label: "Refresh Status",
-        custom_id: "status_refresh",
-      },
-    ],
-  },
-];
