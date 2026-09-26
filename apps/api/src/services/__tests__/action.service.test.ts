@@ -6,8 +6,10 @@ import {
 } from "../action.service";
 
 import {
+  createActionAttempt,
   findAction,
   updateAction,
+  updateActionAttempt,
 } from "../../repositories/action.repository";
 
 import {
@@ -21,6 +23,8 @@ import {
 vi.mock("../../repositories/action.repository", () => ({
   findAction: vi.fn(),
   updateAction: vi.fn(),
+  createActionAttempt: vi.fn(),
+  updateActionAttempt: vi.fn(),
 }));
 
 vi.mock(
@@ -36,6 +40,8 @@ vi.mock("../configuration.service", () => ({
 
 const mockedFindAction = vi.mocked(findAction);
 const mockedUpdateAction = vi.mocked(updateAction);
+const mockedCreateActionAttempt = vi.mocked(createActionAttempt);
+const mockedUpdateActionAttempt = vi.mocked(updateActionAttempt);
 const mockedSendChannelMessage =
   vi.mocked(sendChannelMessage);
 const mockedGetServerConfiguration =
@@ -44,6 +50,23 @@ const mockedGetServerConfiguration =
 describe("action.service", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    mockedCreateActionAttempt.mockImplementation(
+      async ({ actionId, attempt }) =>
+        ({
+          id: `attempt-${attempt}`,
+          actionId,
+          attempt,
+          status: "PROCESSING",
+          error: null,
+          createdAt: new Date(),
+          completedAt: null,
+        }) as never,
+    );
+
+    mockedUpdateActionAttempt.mockResolvedValue(
+      {} as never,
+    );
   });
 
   describe("executeMirrorAction", () => {
@@ -94,6 +117,20 @@ describe("action.service", () => {
       ).toHaveBeenCalledWith(
         "mirror-channel",
         "Test notification",
+      );
+
+      expect(mockedCreateActionAttempt).toHaveBeenCalledTimes(1);
+
+      expect(mockedCreateActionAttempt).toHaveBeenCalledWith({
+        actionId: "action-1",
+        attempt: 1,
+      });
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-1",
+        expect.objectContaining({
+          status: "SUCCESS",
+        }),
       );
 
       expect(mockedUpdateAction).toHaveBeenCalledWith(
@@ -171,6 +208,39 @@ describe("action.service", () => {
         "Test notification",
       );
 
+      expect(mockedCreateActionAttempt).toHaveBeenCalledTimes(2);
+
+      expect(mockedCreateActionAttempt).toHaveBeenNthCalledWith(
+        1,
+        {
+          actionId: "action-1",
+          attempt: 1,
+        },
+      );
+
+      expect(mockedCreateActionAttempt).toHaveBeenNthCalledWith(
+        2,
+        {
+          actionId: "action-1",
+          attempt: 2,
+        },
+      );
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-1",
+        expect.objectContaining({
+          status: "FAILED",
+          error: "Discord API unavailable",
+        }),
+      );
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-2",
+        expect.objectContaining({
+          status: "SUCCESS",
+        }),
+      );
+
       expect(mockedUpdateAction).toHaveBeenCalledWith(
         "action-1",
         expect.objectContaining({
@@ -231,6 +301,56 @@ describe("action.service", () => {
         mockedSendChannelMessage,
       ).toHaveBeenCalledTimes(3);
 
+      expect(mockedCreateActionAttempt).toHaveBeenCalledTimes(3);
+
+      expect(mockedCreateActionAttempt).toHaveBeenNthCalledWith(
+        1,
+        {
+          actionId: "action-1",
+          attempt: 1,
+        },
+      );
+
+      expect(mockedCreateActionAttempt).toHaveBeenNthCalledWith(
+        2,
+        {
+          actionId: "action-1",
+          attempt: 2,
+        },
+      );
+
+      expect(mockedCreateActionAttempt).toHaveBeenNthCalledWith(
+        3,
+        {
+          actionId: "action-1",
+          attempt: 3,
+        },
+      );
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-1",
+        expect.objectContaining({
+          status: "FAILED",
+          error: "Discord API unavailable",
+        }),
+      );
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-2",
+        expect.objectContaining({
+          status: "FAILED",
+          error: "Discord API unavailable",
+        }),
+      );
+
+      expect(mockedUpdateActionAttempt).toHaveBeenCalledWith(
+        "attempt-3",
+        expect.objectContaining({
+          status: "FAILED",
+          error: "Discord API unavailable",
+        }),
+      );
+
       expect(mockedUpdateAction).toHaveBeenCalledWith(
         "action-1",
         expect.objectContaining({
@@ -273,6 +393,10 @@ describe("action.service", () => {
         mockedSendChannelMessage,
       ).not.toHaveBeenCalled();
 
+      expect(
+        mockedCreateActionAttempt,
+      ).not.toHaveBeenCalled();
+
       expect(mockedUpdateAction).toHaveBeenCalledWith(
         "action-1",
         {
@@ -297,6 +421,10 @@ describe("action.service", () => {
 
       expect(
         mockedSendChannelMessage,
+      ).not.toHaveBeenCalled();
+
+      expect(
+        mockedCreateActionAttempt,
       ).not.toHaveBeenCalled();
 
       expect(

@@ -57,6 +57,7 @@ export const ModelName = {
   ServerConfiguration: 'ServerConfiguration',
   CommandInteraction: 'CommandInteraction',
   Action: 'Action',
+  ActionAttempt: 'ActionAttempt',
   CommandConfiguration: 'CommandConfiguration'
 } as const
 
@@ -149,11 +150,24 @@ export const ActionScalarFieldEnum = {
   status: 'status',
   attempts: 'attempts',
   error: 'error',
-  createdAt: 'createdAt',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
 } as const
 
 export type ActionScalarFieldEnum = (typeof ActionScalarFieldEnum)[keyof typeof ActionScalarFieldEnum]
+
+
+export const ActionAttemptScalarFieldEnum = {
+  id: 'id',
+  actionId: 'actionId',
+  attempt: 'attempt',
+  status: 'status',
+  error: 'error',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ActionAttemptScalarFieldEnum = (typeof ActionAttemptScalarFieldEnum)[keyof typeof ActionAttemptScalarFieldEnum]
 
 
 export const CommandConfigurationScalarFieldEnum = {

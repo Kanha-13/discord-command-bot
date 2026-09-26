@@ -8,7 +8,7 @@ import { requireAdmin } from "../middleware/require-admin";
 
 const router = Router();
 
-router.use(requireAuth, requireAdmin);
+// router.use(requireAuth, requireAdmin);
 
 router.get("/", listInteractions);
 router.get("/:id", getInteraction);

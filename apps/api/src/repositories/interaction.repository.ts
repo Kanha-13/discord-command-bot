@@ -68,7 +68,7 @@ export async function findInteractions(
     command,
     status,
   } = params;
-  
+
   const where = {
     ...(serverId ? { serverId } : {}),
     ...(command ? { commandName: command } : {}),
@@ -80,7 +80,15 @@ export async function findInteractions(
       where,
       include: {
         server: true,
-        actions: true,
+        actions: {
+          include: {
+            attemptsHistory: {
+              orderBy: {
+                attempt: "asc",
+              },
+            }
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -107,7 +115,15 @@ export async function findInteractionById(id: string) {
     },
     include: {
       server: true,
-      actions: true,
+      actions: {
+        include: {
+          attemptsHistory: {
+            orderBy: {
+              attempt: "asc",
+            },
+          },
+        },
+      },
     },
   });
 }

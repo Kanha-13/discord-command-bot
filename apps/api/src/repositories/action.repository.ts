@@ -1,4 +1,4 @@
-import {prisma} from "../configs/database";
+import { prisma } from "../configs/database";
 
 export async function createActions(
   interactionId: string,
@@ -56,5 +56,47 @@ export async function updateAction(
       id,
     },
     data,
+  });
+}
+
+export async function createActionAttempt(data: {
+  actionId: string;
+  attempt: number;
+}) {
+  return prisma.actionAttempt.create({
+    data: {
+      actionId: data.actionId,
+      attempt: data.attempt,
+      status: "PROCESSING",
+    },
+  });
+}
+
+export async function updateActionAttempt(
+  id: string,
+  data: {
+    status?: "PROCESSING" | "SUCCESS" | "FAILED";
+    error?: string;
+    completedAt?: Date;
+  },
+) {
+  return prisma.actionAttempt.update({
+    where: {
+      id,
+    },
+    data,
+  });
+}
+
+export async function findActionAttempts(
+  actionId: string,
+) {
+  return prisma.actionAttempt.findMany({
+    where: {
+      actionId,
+    },
+    orderBy: {
+      attempt: "asc",
+    },
   });
 }

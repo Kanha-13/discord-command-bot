@@ -111,6 +111,12 @@ model CommandInteraction {
   @@index([userDiscordId])
 }
 
+enum ActionAttemptStatus {
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
 model Action {
   id            String       @id @default(cuid())
   interactionId String
@@ -118,15 +124,32 @@ model Action {
   status        ActionStatus @default(PENDING)
   attempts      Int          @default(0)
   error         String?
+  completedAt   DateTime?
 
   interaction CommandInteraction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime  @default(now())
-  completedAt DateTime?
+  attemptsHistory ActionAttempt[]
+
+  createdAt DateTime @default(now())
 
   @@index([interactionId])
   @@index([status])
-  @@index([type, status])
+}
+
+model ActionAttempt {
+  id     String              @id @default(cuid())
+  actionId String
+  attempt Int
+  status  ActionAttemptStatus
+  error   String?
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  action Action @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  @@unique([actionId, attempt])
+  @@index([actionId])
 }
 
 model CommandConfiguration {

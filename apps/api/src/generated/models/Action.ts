@@ -41,8 +41,8 @@ export type ActionMinAggregateOutputType = {
   status: $Enums.ActionStatus | null
   attempts: number | null
   error: string | null
-  createdAt: Date | null
   completedAt: Date | null
+  createdAt: Date | null
 }
 
 export type ActionMaxAggregateOutputType = {
@@ -52,8 +52,8 @@ export type ActionMaxAggregateOutputType = {
   status: $Enums.ActionStatus | null
   attempts: number | null
   error: string | null
-  createdAt: Date | null
   completedAt: Date | null
+  createdAt: Date | null
 }
 
 export type ActionCountAggregateOutputType = {
@@ -63,8 +63,8 @@ export type ActionCountAggregateOutputType = {
   status: number
   attempts: number
   error: number
-  createdAt: number
   completedAt: number
+  createdAt: number
   _all: number
 }
 
@@ -84,8 +84,8 @@ export type ActionMinAggregateInputType = {
   status?: true
   attempts?: true
   error?: true
-  createdAt?: true
   completedAt?: true
+  createdAt?: true
 }
 
 export type ActionMaxAggregateInputType = {
@@ -95,8 +95,8 @@ export type ActionMaxAggregateInputType = {
   status?: true
   attempts?: true
   error?: true
-  createdAt?: true
   completedAt?: true
+  createdAt?: true
 }
 
 export type ActionCountAggregateInputType = {
@@ -106,8 +106,8 @@ export type ActionCountAggregateInputType = {
   status?: true
   attempts?: true
   error?: true
-  createdAt?: true
   completedAt?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -204,8 +204,8 @@ export type ActionGroupByOutputType = {
   status: $Enums.ActionStatus
   attempts: number
   error: string | null
-  createdAt: Date
   completedAt: Date | null
+  createdAt: Date
   _count: ActionCountAggregateOutputType | null
   _avg: ActionAvgAggregateOutputType | null
   _sum: ActionSumAggregateOutputType | null
@@ -238,9 +238,10 @@ export type ActionWhereInput = {
   status?: Prisma.EnumActionStatusFilter<"Action"> | $Enums.ActionStatus
   attempts?: Prisma.IntFilter<"Action"> | number
   error?: Prisma.StringNullableFilter<"Action"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Action"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
   interaction?: Prisma.XOR<Prisma.CommandInteractionScalarRelationFilter, Prisma.CommandInteractionWhereInput>
+  attemptsHistory?: Prisma.ActionAttemptListRelationFilter
 }
 
 export type ActionOrderByWithRelationInput = {
@@ -250,9 +251,10 @@ export type ActionOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
   error?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   interaction?: Prisma.CommandInteractionOrderByWithRelationInput
+  attemptsHistory?: Prisma.ActionAttemptOrderByRelationAggregateInput
 }
 
 export type ActionWhereUniqueInput = Prisma.AtLeast<{
@@ -265,9 +267,10 @@ export type ActionWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumActionStatusFilter<"Action"> | $Enums.ActionStatus
   attempts?: Prisma.IntFilter<"Action"> | number
   error?: Prisma.StringNullableFilter<"Action"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Action"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
   interaction?: Prisma.XOR<Prisma.CommandInteractionScalarRelationFilter, Prisma.CommandInteractionWhereInput>
+  attemptsHistory?: Prisma.ActionAttemptListRelationFilter
 }, "id">
 
 export type ActionOrderByWithAggregationInput = {
@@ -277,8 +280,8 @@ export type ActionOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
   error?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.ActionCountOrderByAggregateInput
   _avg?: Prisma.ActionAvgOrderByAggregateInput
   _max?: Prisma.ActionMaxOrderByAggregateInput
@@ -296,8 +299,8 @@ export type ActionScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumActionStatusWithAggregatesFilter<"Action"> | $Enums.ActionStatus
   attempts?: Prisma.IntWithAggregatesFilter<"Action"> | number
   error?: Prisma.StringNullableWithAggregatesFilter<"Action"> | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Action"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Action"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Action"> | Date | string
 }
 
 export type ActionCreateInput = {
@@ -306,9 +309,10 @@ export type ActionCreateInput = {
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
   interaction: Prisma.CommandInteractionCreateNestedOneWithoutActionsInput
+  attemptsHistory?: Prisma.ActionAttemptCreateNestedManyWithoutActionInput
 }
 
 export type ActionUncheckedCreateInput = {
@@ -318,8 +322,9 @@ export type ActionUncheckedCreateInput = {
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
+  attemptsHistory?: Prisma.ActionAttemptUncheckedCreateNestedManyWithoutActionInput
 }
 
 export type ActionUpdateInput = {
@@ -328,9 +333,10 @@ export type ActionUpdateInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   interaction?: Prisma.CommandInteractionUpdateOneRequiredWithoutActionsNestedInput
+  attemptsHistory?: Prisma.ActionAttemptUpdateManyWithoutActionNestedInput
 }
 
 export type ActionUncheckedUpdateInput = {
@@ -340,8 +346,9 @@ export type ActionUncheckedUpdateInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attemptsHistory?: Prisma.ActionAttemptUncheckedUpdateManyWithoutActionNestedInput
 }
 
 export type ActionCreateManyInput = {
@@ -351,8 +358,8 @@ export type ActionCreateManyInput = {
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type ActionUpdateManyMutationInput = {
@@ -361,8 +368,8 @@ export type ActionUpdateManyMutationInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ActionUncheckedUpdateManyInput = {
@@ -372,8 +379,8 @@ export type ActionUncheckedUpdateManyInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ActionListRelationFilter = {
@@ -393,8 +400,8 @@ export type ActionCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
   error?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ActionAvgOrderByAggregateInput = {
@@ -408,8 +415,8 @@ export type ActionMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
   error?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ActionMinOrderByAggregateInput = {
@@ -419,12 +426,17 @@ export type ActionMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
   error?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ActionSumOrderByAggregateInput = {
   attempts?: Prisma.SortOrder
+}
+
+export type ActionScalarRelationFilter = {
+  is?: Prisma.ActionWhereInput
+  isNot?: Prisma.ActionWhereInput
 }
 
 export type ActionCreateNestedManyWithoutInteractionInput = {
@@ -485,14 +497,29 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type ActionCreateNestedOneWithoutAttemptsHistoryInput = {
+  create?: Prisma.XOR<Prisma.ActionCreateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedCreateWithoutAttemptsHistoryInput>
+  connectOrCreate?: Prisma.ActionCreateOrConnectWithoutAttemptsHistoryInput
+  connect?: Prisma.ActionWhereUniqueInput
+}
+
+export type ActionUpdateOneRequiredWithoutAttemptsHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.ActionCreateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedCreateWithoutAttemptsHistoryInput>
+  connectOrCreate?: Prisma.ActionCreateOrConnectWithoutAttemptsHistoryInput
+  upsert?: Prisma.ActionUpsertWithoutAttemptsHistoryInput
+  connect?: Prisma.ActionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActionUpdateToOneWithWhereWithoutAttemptsHistoryInput, Prisma.ActionUpdateWithoutAttemptsHistoryInput>, Prisma.ActionUncheckedUpdateWithoutAttemptsHistoryInput>
+}
+
 export type ActionCreateWithoutInteractionInput = {
   id?: string
   type: $Enums.ActionType
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
+  attemptsHistory?: Prisma.ActionAttemptCreateNestedManyWithoutActionInput
 }
 
 export type ActionUncheckedCreateWithoutInteractionInput = {
@@ -501,8 +528,9 @@ export type ActionUncheckedCreateWithoutInteractionInput = {
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
+  attemptsHistory?: Prisma.ActionAttemptUncheckedCreateNestedManyWithoutActionInput
 }
 
 export type ActionCreateOrConnectWithoutInteractionInput = {
@@ -541,8 +569,68 @@ export type ActionScalarWhereInput = {
   status?: Prisma.EnumActionStatusFilter<"Action"> | $Enums.ActionStatus
   attempts?: Prisma.IntFilter<"Action"> | number
   error?: Prisma.StringNullableFilter<"Action"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Action"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Action"> | Date | string
+}
+
+export type ActionCreateWithoutAttemptsHistoryInput = {
+  id?: string
+  type: $Enums.ActionType
+  status?: $Enums.ActionStatus
+  attempts?: number
+  error?: string | null
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+  interaction: Prisma.CommandInteractionCreateNestedOneWithoutActionsInput
+}
+
+export type ActionUncheckedCreateWithoutAttemptsHistoryInput = {
+  id?: string
+  interactionId: string
+  type: $Enums.ActionType
+  status?: $Enums.ActionStatus
+  attempts?: number
+  error?: string | null
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type ActionCreateOrConnectWithoutAttemptsHistoryInput = {
+  where: Prisma.ActionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActionCreateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedCreateWithoutAttemptsHistoryInput>
+}
+
+export type ActionUpsertWithoutAttemptsHistoryInput = {
+  update: Prisma.XOR<Prisma.ActionUpdateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedUpdateWithoutAttemptsHistoryInput>
+  create: Prisma.XOR<Prisma.ActionCreateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedCreateWithoutAttemptsHistoryInput>
+  where?: Prisma.ActionWhereInput
+}
+
+export type ActionUpdateToOneWithWhereWithoutAttemptsHistoryInput = {
+  where?: Prisma.ActionWhereInput
+  data: Prisma.XOR<Prisma.ActionUpdateWithoutAttemptsHistoryInput, Prisma.ActionUncheckedUpdateWithoutAttemptsHistoryInput>
+}
+
+export type ActionUpdateWithoutAttemptsHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
+  status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
+  attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  interaction?: Prisma.CommandInteractionUpdateOneRequiredWithoutActionsNestedInput
+}
+
+export type ActionUncheckedUpdateWithoutAttemptsHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  interactionId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
+  status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
+  attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ActionCreateManyInteractionInput = {
@@ -551,8 +639,8 @@ export type ActionCreateManyInteractionInput = {
   status?: $Enums.ActionStatus
   attempts?: number
   error?: string | null
-  createdAt?: Date | string
   completedAt?: Date | string | null
+  createdAt?: Date | string
 }
 
 export type ActionUpdateWithoutInteractionInput = {
@@ -561,8 +649,9 @@ export type ActionUpdateWithoutInteractionInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attemptsHistory?: Prisma.ActionAttemptUpdateManyWithoutActionNestedInput
 }
 
 export type ActionUncheckedUpdateWithoutInteractionInput = {
@@ -571,8 +660,9 @@ export type ActionUncheckedUpdateWithoutInteractionInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attemptsHistory?: Prisma.ActionAttemptUncheckedUpdateManyWithoutActionNestedInput
 }
 
 export type ActionUncheckedUpdateManyWithoutInteractionInput = {
@@ -581,10 +671,39 @@ export type ActionUncheckedUpdateManyWithoutInteractionInput = {
   status?: Prisma.EnumActionStatusFieldUpdateOperationsInput | $Enums.ActionStatus
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type ActionCountOutputType
+ */
+
+export type ActionCountOutputType = {
+  attemptsHistory: number
+}
+
+export type ActionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attemptsHistory?: boolean | ActionCountOutputTypeCountAttemptsHistoryArgs
+}
+
+/**
+ * ActionCountOutputType without action
+ */
+export type ActionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActionCountOutputType
+   */
+  select?: Prisma.ActionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ActionCountOutputType without action
+ */
+export type ActionCountOutputTypeCountAttemptsHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActionAttemptWhereInput
+}
 
 
 export type ActionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -594,9 +713,11 @@ export type ActionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   status?: boolean
   attempts?: boolean
   error?: boolean
-  createdAt?: boolean
   completedAt?: boolean
+  createdAt?: boolean
   interaction?: boolean | Prisma.CommandInteractionDefaultArgs<ExtArgs>
+  attemptsHistory?: boolean | Prisma.Action$attemptsHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.ActionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["action"]>
 
 export type ActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -606,8 +727,8 @@ export type ActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   status?: boolean
   attempts?: boolean
   error?: boolean
-  createdAt?: boolean
   completedAt?: boolean
+  createdAt?: boolean
   interaction?: boolean | Prisma.CommandInteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["action"]>
 
@@ -618,8 +739,8 @@ export type ActionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   status?: boolean
   attempts?: boolean
   error?: boolean
-  createdAt?: boolean
   completedAt?: boolean
+  createdAt?: boolean
   interaction?: boolean | Prisma.CommandInteractionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["action"]>
 
@@ -630,13 +751,15 @@ export type ActionSelectScalar = {
   status?: boolean
   attempts?: boolean
   error?: boolean
-  createdAt?: boolean
   completedAt?: boolean
+  createdAt?: boolean
 }
 
-export type ActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "interactionId" | "type" | "status" | "attempts" | "error" | "createdAt" | "completedAt", ExtArgs["result"]["action"]>
+export type ActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "interactionId" | "type" | "status" | "attempts" | "error" | "completedAt" | "createdAt", ExtArgs["result"]["action"]>
 export type ActionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interaction?: boolean | Prisma.CommandInteractionDefaultArgs<ExtArgs>
+  attemptsHistory?: boolean | Prisma.Action$attemptsHistoryArgs<ExtArgs>
+  _count?: boolean | Prisma.ActionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ActionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   interaction?: boolean | Prisma.CommandInteractionDefaultArgs<ExtArgs>
@@ -649,6 +772,7 @@ export type $ActionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Action"
   objects: {
     interaction: Prisma.$CommandInteractionPayload<ExtArgs>
+    attemptsHistory: Prisma.$ActionAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -657,8 +781,8 @@ export type $ActionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     status: $Enums.ActionStatus
     attempts: number
     error: string | null
-    createdAt: Date
     completedAt: Date | null
+    createdAt: Date
   }, ExtArgs["result"]["action"]>
   composites: {}
 }
@@ -1054,6 +1178,7 @@ readonly fields: ActionFieldRefs;
 export interface Prisma__ActionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   interaction<T extends Prisma.CommandInteractionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommandInteractionDefaultArgs<ExtArgs>>): Prisma.Prisma__CommandInteractionClient<runtime.Types.Result.GetResult<Prisma.$CommandInteractionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  attemptsHistory<T extends Prisma.Action$attemptsHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Action$attemptsHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActionAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1089,8 +1214,8 @@ export interface ActionFieldRefs {
   readonly status: Prisma.FieldRef<"Action", 'ActionStatus'>
   readonly attempts: Prisma.FieldRef<"Action", 'Int'>
   readonly error: Prisma.FieldRef<"Action", 'String'>
-  readonly createdAt: Prisma.FieldRef<"Action", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Action", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"Action", 'DateTime'>
 }
     
 
@@ -1489,6 +1614,30 @@ export type ActionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Actions to delete.
    */
   limit?: number
+}
+
+/**
+ * Action.attemptsHistory
+ */
+export type Action$attemptsHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActionAttempt
+   */
+  select?: Prisma.ActionAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActionAttempt
+   */
+  omit?: Prisma.ActionAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActionAttemptInclude<ExtArgs> | null
+  where?: Prisma.ActionAttemptWhereInput
+  orderBy?: Prisma.ActionAttemptOrderByWithRelationInput | Prisma.ActionAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.ActionAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActionAttemptScalarFieldEnum | Prisma.ActionAttemptScalarFieldEnum[]
 }
 
 /**

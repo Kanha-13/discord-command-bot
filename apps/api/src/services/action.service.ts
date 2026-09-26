@@ -1,6 +1,8 @@
 import {
+  createActionAttempt,
   findAction,
   updateAction,
+  updateActionAttempt
 } from "../repositories/action.repository";
 
 import {
@@ -56,11 +58,21 @@ export async function executeMirrorAction(data: {
       error: undefined,
     });
 
+    const actionAttempt = await createActionAttempt({
+      actionId: action.id,
+      attempt,
+    });
+
     try {
       await sendChannelMessage(
         configuration.mirrorChannelId,
         data.message,
       );
+
+      await updateActionAttempt(actionAttempt.id, {
+        status: "SUCCESS",
+        completedAt: new Date(),
+      });
 
       await updateAction(action.id, {
         status: "SUCCESS",
@@ -74,6 +86,12 @@ export async function executeMirrorAction(data: {
         error instanceof Error
           ? error.message
           : "Unknown Discord API error.";
+
+      await updateActionAttempt(actionAttempt.id, {
+        status: "FAILED",
+        error: message,
+        completedAt: new Date(),
+      });
 
       await updateAction(action.id, {
         status:
@@ -111,6 +129,16 @@ export async function markDiscordResponseSuccess(
       "Discord response action was not found.",
     );
   }
+
+  const actionAttempt = await createActionAttempt({
+    actionId: action.id,
+    attempt: 1,
+  });
+
+  await updateActionAttempt(actionAttempt.id, {
+    status: "SUCCESS",
+    completedAt: new Date(),
+  });
 
   return updateAction(action.id, {
     status: "SUCCESS",

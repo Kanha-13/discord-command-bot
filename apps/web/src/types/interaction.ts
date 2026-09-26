@@ -14,6 +14,16 @@ export type ActionStatus =
   | "SUCCESS"
   | "FAILED";
 
+export interface ActionAttempt {
+  id: string;
+  actionId: string;
+  attempt: number;
+  status: ActionStatus;
+  error?: string | null;
+  startedAt: string;
+  completedAt?: string | null;
+}
+
 export interface InteractionAction {
   id: string;
   type: ActionType;
@@ -22,6 +32,7 @@ export interface InteractionAction {
   error?: string | null;
   createdAt: string;
   completedAt?: string | null;
+  attemptsHistory: ActionAttempt[];
 }
 
 export interface InteractionServer {

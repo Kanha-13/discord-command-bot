@@ -70,6 +70,11 @@ export type CommandInteraction = Prisma.CommandInteractionModel
  */
 export type Action = Prisma.ActionModel
 /**
+ * Model ActionAttempt
+ * 
+ */
+export type ActionAttempt = Prisma.ActionAttemptModel
+/**
  * Model CommandConfiguration
  * 
  */

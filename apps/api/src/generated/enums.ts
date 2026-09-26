@@ -42,3 +42,12 @@ export const ActionStatus = {
 } as const
 
 export type ActionStatus = (typeof ActionStatus)[keyof typeof ActionStatus]
+
+
+export const ActionAttemptStatus = {
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+} as const
+
+export type ActionAttemptStatus = (typeof ActionAttemptStatus)[keyof typeof ActionAttemptStatus]

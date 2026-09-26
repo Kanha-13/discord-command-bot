@@ -403,6 +403,7 @@ export const ModelName = {
   ServerConfiguration: 'ServerConfiguration',
   CommandInteraction: 'CommandInteraction',
   Action: 'Action',
+  ActionAttempt: 'ActionAttempt',
   CommandConfiguration: 'CommandConfiguration'
 } as const
 
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "discordServer" | "serverConfiguration" | "commandInteraction" | "action" | "commandConfiguration"
+    modelProps: "user" | "session" | "discordServer" | "serverConfiguration" | "commandInteraction" | "action" | "actionAttempt" | "commandConfiguration"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -867,6 +868,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ActionAttempt: {
+      payload: Prisma.$ActionAttemptPayload<ExtArgs>
+      fields: Prisma.ActionAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ActionAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ActionAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.ActionAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ActionAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.ActionAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.ActionAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.ActionAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ActionAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.ActionAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        update: {
+          args: Prisma.ActionAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.ActionAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ActionAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ActionAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.ActionAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActionAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.ActionAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateActionAttempt>
+        }
+        groupBy: {
+          args: Prisma.ActionAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ActionAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActionAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
     CommandConfiguration: {
       payload: Prisma.$CommandConfigurationPayload<ExtArgs>
       fields: Prisma.CommandConfigurationFieldRefs
@@ -1053,11 +1128,24 @@ export const ActionScalarFieldEnum = {
   status: 'status',
   attempts: 'attempts',
   error: 'error',
-  createdAt: 'createdAt',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
 } as const
 
 export type ActionScalarFieldEnum = (typeof ActionScalarFieldEnum)[keyof typeof ActionScalarFieldEnum]
+
+
+export const ActionAttemptScalarFieldEnum = {
+  id: 'id',
+  actionId: 'actionId',
+  attempt: 'attempt',
+  status: 'status',
+  error: 'error',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ActionAttemptScalarFieldEnum = (typeof ActionAttemptScalarFieldEnum)[keyof typeof ActionAttemptScalarFieldEnum]
 
 
 export const CommandConfigurationScalarFieldEnum = {
@@ -1228,6 +1316,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ActionAttemptStatus'
+ */
+export type EnumActionAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionAttemptStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ActionAttemptStatus[]'
+ */
+export type ListEnumActionAttemptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActionAttemptStatus[]'>
     
 
 
@@ -1408,6 +1510,7 @@ export type GlobalOmitConfig = {
   serverConfiguration?: Prisma.ServerConfigurationOmit
   commandInteraction?: Prisma.CommandInteractionOmit
   action?: Prisma.ActionOmit
+  actionAttempt?: Prisma.ActionAttemptOmit
   commandConfiguration?: Prisma.CommandConfigurationOmit
 }
 
