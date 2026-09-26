@@ -16,8 +16,8 @@ function getActionLabel(type: InteractionAction["type"]) {
 const statusMeta = (status: string) => {
   switch (status) {
     case "SUCCESS": return { text: "text-emerald-400", bg: "bg-emerald-500/10", dot: "bg-emerald-400", border: "border-emerald-500/20" };
-    case "FAILED":  return { text: "text-red-400",     bg: "bg-red-500/10",     dot: "bg-red-400",     border: "border-red-500/20"     };
-    default:        return { text: "text-slate-400",   bg: "bg-white/5",        dot: "bg-slate-500",   border: "border-white/10"       };
+    case "FAILED": return { text: "text-red-400", bg: "bg-red-500/10", dot: "bg-red-400", border: "border-red-500/20" };
+    default: return { text: "text-slate-400", bg: "bg-white/5", dot: "bg-slate-500", border: "border-white/10" };
   }
 };
 
@@ -59,8 +59,8 @@ function AttemptHistory({ attempts }: { attempts: ActionAttempt[] }) {
               {attempt.error && (
                 <div className="mt-1.5 flex items-start gap-1.5 rounded-md border border-red-500/20 bg-red-500/10 px-2 py-1.5">
                   <svg className="mt-px h-3 w-3 shrink-0 text-red-400" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 4v3M6 8.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                    <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2"/>
+                    <path d="M6 4v3M6 8.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2" />
                   </svg>
                   <p className="text-[10px] leading-relaxed text-red-400">{attempt.error}</p>
                 </div>
@@ -96,23 +96,25 @@ function ActionRow({ action }: { action: InteractionAction }) {
             <span className={`text-[10px] font-semibold ${s.text}`}>{action.status}</span>
           </div>
 
-          {hasHistory && (
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              className={`flex w-13 items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
-                expanded ? "bg-white/10 text-slate-300" : "text-slate-500 hover:bg-white/8 hover:text-slate-300"
-              }`}
-            >
-              {expanded ? "Hide" : "Details"}
-              <svg
-                className={`h-2.5 w-2.5 ml-auto transition-transform duration-150 ${expanded ? "rotate-180" : ""}`}
-                viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5"
+          {/* Always reserve the same width whether or not the button is shown */}
+          <div className="w-13">
+            {hasHistory && (
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className={`flex w-full items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${expanded ? "bg-white/10 text-slate-300" : "text-slate-500 hover:bg-white/8 hover:text-slate-300"
+                  }`}
               >
-                <path d="M2 3.5l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          )}
+                {expanded ? "Hide" : "Details"}
+                <svg
+                  className={`ml-auto h-2.5 w-2.5 transition-transform duration-150 ${expanded ? "rotate-180" : ""}`}
+                  viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5"
+                >
+                  <path d="M2 3.5l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
