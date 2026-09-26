@@ -100,13 +100,13 @@ function ActionRow({ action }: { action: InteractionAction }) {
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
-              className={`flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
+              className={`flex w-13 items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
                 expanded ? "bg-white/10 text-slate-300" : "text-slate-500 hover:bg-white/8 hover:text-slate-300"
               }`}
             >
               {expanded ? "Hide" : "Details"}
               <svg
-                className={`h-2.5 w-2.5 transition-transform duration-150 ${expanded ? "rotate-180" : ""}`}
+                className={`h-2.5 w-2.5 ml-auto transition-transform duration-150 ${expanded ? "rotate-180" : ""}`}
                 viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5"
               >
                 <path d="M2 3.5l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
