@@ -25,7 +25,7 @@ import {
   markDiscordResponseSuccess,
 } from "../services/action.service";
 
-import { openReportModal, sendInteractionFollowUp, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
+import { openReportModal, sendInteractionFollowUp, sendInteractionResponse, statusRefreshButton, updateInteractionResponse } from "../integrations/discord/discord.interactions";
 import { getCommand } from "../commands/command.registry";
 import { analyzeReport } from "../services/ai.services";
 
@@ -239,8 +239,8 @@ async function processModalSubmission(
         Category: ${analysis.category}
         Severity: ${analysis.severity}
         Summary: ${analysis.summary}`;
-              } else {
-                mirrorMessage += `
+      } else {
+        mirrorMessage += `
               
         🤖 AI Analysis
         Unavailable`;
@@ -600,6 +600,47 @@ export async function handleDiscordInteraction(
     await markInteractionProcessing(
       interactionRecord.interaction.id,
     );
+
+    const channelCheck =
+      await isCommandAllowedInChannel(
+        server.id,
+        interaction.data.name!,
+        interaction.channel_id!,
+      );
+
+    if (!channelCheck.allowed) {
+      let message =
+        "⚠️ This command is not enabled in this channel.";
+
+      if (channelCheck.reason === "NOT_CONFIGURED") {
+        message =
+          "⚠️ This server has not been configured yet.";
+      }
+
+      if (channelCheck.reason === "COMMAND_DISABLED") {
+        message =
+          "⚠️ This command is currently disabled.";
+      }
+
+      await sendInteractionResponse(
+        interaction.id,
+        interaction.token,
+        {
+          content: message,
+        },
+      );
+
+      await markDiscordResponseSuccess(
+        interactionRecord.interaction.id,
+      );
+
+      await markInteractionCompleted(
+        interactionRecord.interaction.id,
+        message,
+      );
+
+      return;
+    }
 
     /*
      * /report opens a Discord modal.
